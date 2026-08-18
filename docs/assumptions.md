@@ -1,444 +1,215 @@
 # Assumptions
 
-> This document records assumptions made during early system design.
-> Assumptions are not confirmed requirements.
-> Any assumption that materially affects architecture should be validated with the project mentor.
+> These are current architectural assumptions, not confirmed requirements. Major decisions should be validated with Vinit Bhaiya.
 
 ---
 
-# 1. MVP Market Assumption
+## 1. Research Orchestrator
 
 ### Assumption
 
-The first production-quality MVP will focus only on Indian listed equities.
+The Research Planner/Orchestrator will be the central component responsible for coordinating the research process.
 
-### Reason
+Conceptually:
 
-Supporting India and the US simultaneously would increase complexity in:
+```text
+Company
+   ↓
+Research Orchestrator
+   ↓
+Research Tasks
+   ↓
+Retrieval + Evidence
+   ↓
+Analysis
+```
 
-- Company identification
-- Exchange identification
-- Regulatory sources
-- Filing formats
-- Data providers
-- Document retrieval
-- Source validation
-- Research workflows
+### Why
 
-### Architectural implication
+Both Open Deep Research and GPT Researcher demonstrate structured research workflows rather than a single LLM call.
 
-India-specific implementations should be isolated behind interfaces/adapters where practical.
-
-### Status
-
-Reasonable assumption based on the current project specification.
+For EquityScout, the orchestrator can additionally control research cost, retrieval depth and execution.
 
 ---
 
-# 2. Report Format Assumption
+## 2. Parallel Research
 
 ### Assumption
 
-The primary MVP output will be Markdown.
-
-### Reason
-
-The project specification explicitly requires a comprehensive Markdown investment research report.
-
-### Architectural implication
-
-Report generation should be separated from research and evidence collection so that PDF, DOCX, HTML, or UI output can be added later.
-
-### Status
-
-Confirmed for MVP.
-
----
-
-# 3. Research Task Assumption
-
-### Assumption
-
-Research should be decomposed into specialized tasks instead of relying on one general research prompt.
-
-### Reason
-
-The project requires deep research across different dimensions such as business, financials, management, moat, and risks.
-
-Both reference systems also use structured research workflows rather than a single unrestricted generation call.
-
-GPT Researcher explicitly describes a planner that generates research questions followed by execution agents that gather information and a publisher that aggregates findings. :contentReference[oaicite:4]{index=4}
-
-Open Deep Research also demonstrates a configurable research-agent workflow with distinct research, summarization, compression, and report-generation responsibilities. :contentReference[oaicite:5]{index=5}
-
-### Architectural implication
-
-The system should contain some form of:
-
-    Research Planner
-          ↓
-    Research Tasks
-          ↓
-    Research Execution
-          ↓
-    Evidence
-          ↓
-    Synthesis
-
-### Status
-
-Strong architectural assumption. Validate implementation details with mentor.
-
----
-
-# 4. Parallel Research Assumption
-
-### Assumption
-
-Independent research tasks should be capable of running concurrently.
+Independent research pillars should be capable of running in parallel.
 
 For example:
 
-    Business Research
-           │
-    Financial Research
-           │
-    Management Research
+```text
+             Research Orchestrator
+              /       |        \
+             ↓        ↓         ↓
+         Business  Financial  Management
+```
 
-may be executed independently.
-
-### Reason
-
-GPT Researcher explicitly emphasizes parallelized agent work, and its architecture describes separate execution agents gathering information for generated questions. :contentReference[oaicite:6]{index=6}
-
-Open Deep Research's legacy multi-agent implementation also describes parallel processing with multiple researchers working simultaneously. :contentReference[oaicite:7]{index=7}
-
-### Architectural implication
-
-Research task execution should not be tightly coupled to sequential execution.
-
-### Status
-
-To be validated against MVP complexity and expected runtime.
+This can reduce execution time, although concurrency should be controlled to avoid unnecessary API usage and rate limits.
 
 ---
 
-# 5. Primary-Source Preference Assumption
+## 3. Model Routing
 
 ### Assumption
 
-Primary and authoritative sources should be preferred over secondary sources whenever the required information is available from a primary source.
+The architecture should allow different models to be used for different tasks if this provides a meaningful cost/quality advantage.
 
-### Reason
+For example:
 
-The project's research-integrity requirements explicitly prioritize primary sources.
+* Smaller/cheaper model → simple extraction or summarization
+* Stronger model → complex analysis or final synthesis
 
-### Architectural implication
+Open Deep Research provides a useful reference here because it separates model responsibilities for summarization, research, compression and final reporting.
 
-Sources should have metadata describing source type and authority.
-
-A source-ranking mechanism may be required.
-
-### Status
-
-Strong requirement/assumption.
+However, multiple models are not automatically required for the first MVP.
 
 ---
 
-# 6. Evidence-First Assumption
+## 4. Caching and Deduplication
 
 ### Assumption
 
-The system should store evidence separately from the final report.
+The system should avoid repeatedly downloading or processing the same document.
 
-### Reason
+Example:
 
-Important conclusions must be traceable to supporting evidence.
+```text
+Annual Report
+      ↓
+Processed once
+      ↓
+Reusable by:
+├── Financial Research
+├── Business Research
+└── Management Research
+```
 
-### Architectural implication
-
-The architecture should resemble:
-
-    Source
-       ↓
-    Evidence
-       ↓
-    Claim
-       ↓
-    Analysis
-       ↓
-    Report
-
-rather than:
-
-    Source
-       ↓
-    LLM
-       ↓
-    Report
-
-### Status
-
-Strong architectural assumption.
+This should reduce both cost and execution time.
 
 ---
 
-# 7. Citation-First Architecture Assumption
+## 5. Research Budget / Stopping Condition
 
 ### Assumption
 
-Citation metadata should be preserved throughout the research pipeline rather than generated at the final report stage.
+The Research Orchestrator should eventually have a mechanism to decide when enough research has been performed.
 
-### Reason
+Possible signals may include:
 
-Generating citations after analysis risks unsupported or incorrect citations.
+* Required questions answered
+* Sufficient high-quality sources found
+* Evidence coverage reached
+* Research budget exhausted
+* Additional searches producing little new information
 
-### Architectural implication
-
-Evidence objects should retain source metadata such as:
-
-- URL
-- Document
-- Page
-- Section
-- Publication date
-- Retrieval timestamp
-
-### Status
-
-Recommended architecture.
+This is currently an architectural idea and should be validated before implementation.
 
 ---
 
-# 8. Modular Monolith Assumption
+## 6. Evidence Before Analysis
 
 ### Assumption
 
-The MVP should initially be implemented as a modular monolith rather than a collection of microservices.
+Research findings should be stored as evidence before they are passed to the analysis/report-generation stages.
 
-### Reason
+Preferred flow:
 
-The project specification explicitly advises against unnecessary microservices for the MVP.
+```text
+Source
+  ↓
+Retrieved Content
+  ↓
+Evidence / Extraction
+  ↓
+Analysis
+  ↓
+Report
+```
 
-### Architectural implication
-
-Modules should have clean interfaces even if they initially run in one application.
-
-### Status
-
-Recommended.
+This is important for citation traceability and reducing unsupported claims.
 
 ---
 
-# 9. LLM Abstraction Assumption
+## 7. GPT Researcher as the Closer Reference
 
 ### Assumption
 
-LLM providers should be accessed through an abstraction layer.
+GPT Researcher's planner → execution → publisher pattern is currently closer to the expected EquityScout workflow than the more configurable/general Open Deep Research architecture.
 
-### Reason
+However, this does not mean GPT Researcher will be copied.
 
-The system may eventually use different providers/models for:
-
-- Research
-- Extraction
-- Summarization
-- Compression
-- Final report generation
-
-Open Deep Research itself separates model responsibilities and supports multiple model providers. :contentReference[oaicite:8]{index=8}
-
-### Architectural implication
-
-Business logic should not depend directly on one LLM provider.
-
-### Status
-
-Recommended.
+Useful concepts from both projects will be combined and adapted.
 
 ---
 
-# 10. Search Abstraction Assumption
+## 8. Modular Monolith
 
 ### Assumption
 
-Search should be represented as an abstraction rather than being permanently tied to one search provider.
+The first MVP should preferably remain a modular monolith.
 
-### Reason
-
-Open Deep Research supports multiple search tools and MCP-based integrations. :contentReference[oaicite:9]{index=9}
-
-GPT Researcher also supports multiple retrieval mechanisms, including web search and MCP. :contentReference[oaicite:10]{index=10}
-
-### Architectural implication
-
-A search interface/provider layer should exist.
-
-### Status
-
-Recommended.
+The initial architecture can contain separate logical modules without immediately splitting them into independent services.
 
 ---
 
-# 11. Document Reuse Assumption
+## 9. Architecture Direction
 
-### Assumption
+Current working direction:
 
-Documents retrieved during one research task should be reusable by other research tasks.
+```text
+User Input
+    ↓
+Company Resolution
+    ↓
+Research Planner / Orchestrator
+    ↓
+Evidence / Extraction Store
+    ↓
+Analysis
+    ↓
+Investment Verdict
+    ↓
+Report
+    ↓
+Validation
+    ↓
+Final Markdown
+```
 
-### Reason
-
-The same annual report may contain:
-
-- Financial information
-- Management information
-- Business information
-- Risk information
-
-Repeatedly downloading the same document would increase latency and cost.
-
-### Architectural implication
-
-Document identity and content hashes should be maintained.
-
-### Status
-
-Recommended.
-
----
-
-# 12. Research-State Assumption
-
-### Assumption
-
-The system should persist research state sufficiently to support:
-
-- Retries
-- Debugging
-- Reproducibility
-- Partial failure recovery
-- Cost tracking
-
-### Architectural implication
-
-Research execution should maintain explicit state rather than relying entirely on transient Python variables.
-
-### Status
-
-Recommended.
+The exact internal boundaries are still subject to design review.
 
 ---
 
-# 13. Verdict Engine Assumption
+## 10. Model and Search Abstraction
 
 ### Assumption
 
-The investment-verdict framework is not finalized.
+LLM and search providers should be accessed through abstractions rather than being tightly coupled to one provider.
 
-### Reason
+This allows future changes in:
 
-The current requirements explicitly state that the exact framework should not be invented as a confirmed requirement.
+* LLM provider
+* Search provider
+* Retrieval mechanism
 
-### Architectural implication
-
-The verdict engine should be replaceable.
-
-### Status
-
-Must be confirmed with Vinit.
+without rewriting the research engine.
 
 ---
 
-# 14. Historical Financial Depth Assumption
+## 11. Scope Control
 
-### Assumption
+The MVP should avoid implementing advanced features simply because the reference projects support them.
 
-The MVP requires enough historical information to identify meaningful financial trends, but the exact number of years is not yet fixed.
+Examples:
 
-### Reason
+* Recursive research trees
+* Large multi-agent hierarchies
+* Complex MCP ecosystems
+* Advanced prediction
+* US equity workflows
+* Large frontend systems
 
-The specification explicitly avoids permanently hard-coding a historical depth.
-
-### Architectural implication
-
-Research planning should eventually be capable of determining the required historical depth.
-
-### Status
-
-Needs mentor confirmation.
-
----
-
-# 15. UI Assumption
-
-### Assumption
-
-A sophisticated frontend is not required for the first MVP unless explicitly requested.
-
-### Reason
-
-The confirmed initial output is a Markdown research report.
-
-### Architectural implication
-
-The research engine should be usable independently from a frontend.
-
-### Status
-
-Needs mentor confirmation.
-
----
-
-# 16. Deployment Assumption
-
-### Assumption
-
-Deployment requirements should be treated separately from research-engine architecture until the MVP workflow is stable.
-
-### Reason
-
-Premature deployment complexity may slow research-system development.
-
-### Status
-
-Needs confirmation based on internship expectations.
-
----
-
-# 17. Financial Data Assumption
-
-### Assumption
-
-Financial data should preferably come from authoritative filings and company/exchange sources instead of relying entirely on third-party financial APIs.
-
-### Reason
-
-The project emphasizes source authenticity and citation.
-
-### Architectural implication
-
-Financial data providers should be replaceable and source metadata should be retained.
-
-### Status
-
-Recommended.
-
----
-
-# 18. Research Integrity Assumption
-
-### Assumption
-
-An LLM-generated statement is never considered evidence by itself.
-
-### Reason
-
-The project explicitly requires separation between sourced facts and model-generated analysis.
-
-### Architectural implication
-
-Evidence and model reasoning must remain distinguishable.
-
-### Status
-
-Strong requirement.
+These should only be introduced when the project requirements justify them.

@@ -1,8 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db import get_db
-from schemas import CreateResearchRunRequest, CreateResearchRunResponse, ResearchRunOut, ResearchTaskOut
-from services.research_run_service import create_research_run, get_research_run
+
+from apps.api.src.db import get_db
+from apps.api.src.schemas import (
+    CreateResearchRunRequest,
+    CreateResearchRunResponse,
+    ResearchRunOut,
+    ResearchTaskOut,
+)
+from apps.api.src.services.research_run_service import (
+    create_research_run,
+    get_research_run,
+)
+
 
 router = APIRouter()
 

@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db import get_db
-from schemas import ReportOut
-from services.report_service import get_report_by_run_id
+
+from apps.api.src.db import get_db
+from apps.api.src.schemas import ReportOut
+from apps.api.src.services.report_service import get_report_by_run_id
 
 router = APIRouter()
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from routes.research_runs import router as research_runs_router
-from routes.reports import router as reports_router
+from apps.api.src.routes.research_runs import router as research_runs_router
+from apps.api.src.routes.reports import router as reports_router
 
 app = FastAPI(title="EquityScout API", version="0.1.0")
 

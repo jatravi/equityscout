@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Session
-from models import Company, ResearchRun, ResearchTask
+from apps.api.src.models import Company, ResearchRun, ResearchTask
 
 DEFAULT_TASKS = ["BUSINESS", "FINANCIAL", "PROMOTER"]
 

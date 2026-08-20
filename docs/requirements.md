@@ -1,64 +1,96 @@
-# Requirements
+# Requirements (MVP)
 
-## 1. Project Objective
+## 1) Project Objective
 
-Build a deep-research equity analysis system that can research a listed company and generate a comprehensive, citation-backed Markdown investment research report.
+Build an evidence-first deep-research equity analysis system that researches a listed company and generates a comprehensive, citation-backed Markdown investment research report.
 
-The initial MVP will focus on Indian listed equities, while keeping the architecture extensible for future US equity support.
-
----
-
-## 2. Initial Research Areas
-
-The system should be capable of researching:
-
-### Business
-
-* Business model
-* Products/services
-* Business segments
-* Markets served
-* Customers
-* Competition
-* Competitive advantages / moat
-* Growth drivers
-* Business risks
-
-### Financials
-
-* Revenue
-* Profit
-* Margins
-* Cash flow
-* Balance sheet
-* Debt
-* Capex
-* Financial ratios
-* Historical performance
-* Current financial position
-* Relevant annual reports, AGMs and investor calls
-
-### Management / Promoters
-
-* Background
-* Experience
-* Track record
-* Shareholding
-* Promoter holding and pledging
-* Other businesses
-* Related-party transactions
-* Management changes
-* Regulatory/governance concerns
-* Relevant controversies or litigation
-* Credibility and execution history
+- **MVP market scope:** Indian listed equities only.
+- **Architecture constraint:** India-first implementation, but extensible for future US support without rewriting the core pipeline.
 
 ---
 
-## 3. Research Workflow
+## 2) Scope Definition
 
-The system should follow a structured research process rather than relying on a single LLM prompt.
+## 2.1 In-Scope (MVP)
 
-Initial direction:
+The system must research and synthesize:
+
+1. **Business**
+2. **Financials**
+3. **Management / Promoters**
+
+The system must produce a final report with required sections (see Section 8).
+
+## 2.2 Out-of-Scope (MVP)
+
+The following are explicitly not MVP requirements unless re-approved:
+
+- US equity workflows
+- Valuation frameworks (e.g., DCF, comparables)
+- Peer comparison engine
+- Price/technical analysis
+- Prediction/forecasting
+- Portfolio-level analytics
+- Complex multi-agent hierarchies and distributed microservices
+
+---
+
+## 3) Functional Requirements
+
+## 3.1 Company Input and Resolution
+
+- Accept company input (e.g., name/symbol).
+- Resolve to a single target Indian listed entity where possible.
+- Preserve mapping metadata (e.g., symbol/code/identifier aliases).
+- If resolution is ambiguous, system must mark ambiguity and avoid false attribution.
+
+## 3.2 Research Areas
+
+### A. Business
+
+System should collect evidence relevant to:
+
+- Business model
+- Products/services
+- Business/operating segments
+- Markets served
+- Customer exposure (where available)
+- Competition and industry context
+- Competitive advantages / moat indicators
+- Growth drivers
+- Business risks
+
+### B. Financials
+
+System should collect evidence relevant to:
+
+- Revenue, profit, margins
+- Cash flow
+- Balance sheet, debt
+- Capex
+- Ratios (where derivable from reliable inputs)
+- Historical trends (window configurable; not hardcoded to one fixed period)
+- Current financial position
+- Relevant annual reports, financial results, AGM and investor communications (as available)
+
+### C. Management / Promoters
+
+System should collect evidence relevant to:
+
+- Background and experience
+- Track record / execution signals
+- Shareholding and promoter holding/pledging
+- Related-party disclosures (where available)
+- Management changes
+- Governance/regulatory concerns
+- Material controversies/litigation (only when evidenced)
+- Credibility-related signals grounded in sources
+
+---
+
+## 4) Research Workflow Requirements
+
+The system must use a structured pipeline (not a single LLM prompt):
 
 ```text
 User Input
@@ -67,131 +99,179 @@ Company Resolution
     ↓
 Research Planner / Orchestrator
     ↓
-Research Tasks
+Research Tasks (Business / Financials / Promoters)
     ↓
-Source Discovery / Retrieval
+Source Discovery + Selection
     ↓
-Evidence / Extraction
+Document Retrieval
     ↓
-Analysis
+Parsing + Extraction
+    ↓
+Evidence Store (+ Citation Metadata)
+    ↓
+Analysis (Claims)
     ↓
 Investment Verdict
     ↓
 Report Generation
     ↓
-Citation / Validation
+Claim/Citation Validation
     ↓
 Final Markdown Report
 ```
 
-The architecture should allow independent research areas to be executed in parallel where appropriate.
+- Independent tasks should be executable in parallel where safe and beneficial.
+- Concurrency must be controlled based on provider limits and budget constraints.
 
 ---
 
-## 4. Evidence and Sources
+## 5) Evidence, Citation, and Source Requirements
 
-Important research claims should be traceable to their sources.
+## 5.1 Evidence-First Principle
 
-The system should prioritize authoritative sources such as:
+- Important report claims must be traceable to source evidence.
+- LLM-generated text is **not evidence** unless linked to retrieved source-backed extraction.
+- The system must preserve separation between:
+  1. Sourced facts (evidence)
+  2. Analytical interpretation (claims)
+  3. Investment conclusion (verdict)
 
-* NSE
-* BSE
-* SEBI
-* Company websites
-* Investor-relations pages
-* Annual reports
-* Financial results
-* Investor presentations
-* AGM documents
-* Investor/earnings calls
-* Other relevant regulatory disclosures
+## 5.2 Source Priority
 
-The system should maintain source metadata and should never fabricate citations.
+The system should prioritize authoritative sources, including:
 
----
+- SEBI
+- NSE
+- BSE
+- Company investor-relations pages and official disclosures
+- Annual reports
+- Financial results
+- Investor presentations
+- AGM-related disclosures
+- Investor/earnings communication records (as available)
+- Other regulatory disclosures
 
-## 5. Research Efficiency
+## 5.3 Citation Integrity
 
-The system should minimize:
-
-* Unnecessary searches
-* Duplicate document retrieval
-* Duplicate processing
-* Duplicate LLM calls
-* Excessive context
-* Unnecessary research loops
-
-The research orchestration layer should eventually support:
-
-* Parallel research
-* Caching
-* Deduplication
-* Research-state persistence
-* Cost/token tracking
-* Retry handling
-* Research budget/caps
-
-A research budget or stopping condition should allow the system to stop further retrieval/LLM work when sufficient evidence has been collected for a research task.
-
-The exact stopping strategy is still to be finalized.
+- System must store citation metadata through the pipeline (not add citations only at final formatting).
+- Citations must not be fabricated.
+- If evidence is insufficient, report must explicitly state limitation.
 
 ---
 
-## 6. Investment Verdict
+## 6) Efficiency and Reliability Requirements
 
-The final report must contain an Investment Verdict.
+## 6.1 Efficiency
 
-The exact verdict framework is not yet finalized and should remain independently replaceable.
+System should minimize:
 
-The report should distinguish between:
+- Duplicate source discovery/search
+- Duplicate document retrieval
+- Duplicate document parsing/extraction
+- Duplicate LLM calls
+- Excessive prompt context
+- Unbounded research loops
 
-* Sourced facts
-* Analytical interpretation
-* Model-generated conclusions
+System should support (MVP baseline or staged rollout):
+
+- Caching
+- Deduplication (URL/content-level)
+- Research state persistence
+- Cost/token tracking
+- Retry/fallback handling
+
+## 6.2 Stopping / Budget Control
+
+- Orchestration must support configurable budget/caps (time/cost/calls/depth).
+- Stopping condition should allow early stop when sufficient evidence coverage is reached.
+- Exact sufficiency strategy is configurable and can evolve post-MVP.
+
+## 6.3 Failure Handling
+
+System must gracefully handle:
+
+- Broken/unavailable links
+- Partial source coverage
+- Parsing failures
+- Rate limits/timeouts
+- Conflicting data points
+- LLM/tool failures
+
+The run log should capture failures, retries, skips, and final coverage status.
 
 ---
 
-## 7. Final Report
+## 7) Investment Verdict Requirements
 
-The MVP should generate a Markdown report containing at least:
+- Final report must include an **Investment Verdict** section.
+- Verdict framework must be pluggable/replaceable.
+- MVP must **not** hardcode a rigid scoring system unless explicitly approved.
+- Verdict should be grounded in evidence-backed analysis and acknowledge uncertainty where applicable.
 
-1. Business overview
-2. Investment verdict
+---
+
+## 8) Final Report Requirements (Markdown)
+
+MVP output must include at least:
+
+1. Business Overview
+2. Investment Verdict
 3. Moat
-4. Financial summary
-5. Relevant historical financial information
-6. AGM / investor-call information
-7. Promoter and management deep dive
+4. Financial Summary
+5. Relevant Historical Financial Information
+6. AGM / Investor Communication Highlights (where available)
+7. Promoter and Management Deep Dive
 
-Important claims should include appropriate citations.
+Additional report rules:
 
----
-
-## 8. Future Compatibility
-
-The architecture should remain capable of supporting:
-
-* US equities
-* Additional financial data sources
-* Valuation
-* Peer comparison
-* Price analysis
-* Price prediction
-* Portfolio-level analysis
-
-These are not initial MVP requirements.
+- Important claims should include citations.
+- Missing/unverified information must be clearly indicated.
+- Report should avoid unsupported positive/negative assertions.
 
 ---
 
-## 9. Engineering Priorities
+## 9) Non-Functional Requirements
 
-The project should prioritize:
+Priority order:
 
 1. Correctness
-2. Evidence and traceability
-3. Modularity
-4. Cost efficiency
-5. Execution time
-6. Scalability
+2. Evidence traceability
+3. Reliability under partial failure
+4. Modularity and maintainability
+5. Cost efficiency
+6. Execution time
+7. Scalability/extensibility
 
-The goal is to build a reliable equity-research engine rather than a generic AI agent.
+Additional NFR expectations:
+
+- Reproducible research runs (same inputs should produce auditable run artifacts)
+- Observability for run status, source usage, failures, and model usage
+
+---
+
+## 10) Acceptance Criteria (MVP Gate)
+
+A research run is MVP-acceptable only if all are true:
+
+1. Report includes all required sections (Section 8).
+2. Major analytical claims are citation-backed.
+3. Citation links point to retrievable source artifacts with locator metadata where feasible.
+4. Unsupported claims are not presented as facts.
+5. Missing data is explicitly disclosed.
+6. Run records include enough diagnostics to audit how conclusions were formed.
+
+---
+
+## 11) Future Compatibility (Post-MVP)
+
+Architecture should remain compatible with future additions:
+
+- US equities
+- Additional data providers
+- Valuation modules
+- Peer comparison
+- Price/technical analysis
+- Prediction/forecasting
+- Portfolio-level analysis
+
+These are explicitly deferred and not MVP delivery blockers.

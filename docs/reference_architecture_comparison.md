@@ -2,58 +2,49 @@
 
 ## Purpose
 
-Vinit Bhaiya suggested two projects as references:
+Vinit Bhaiya suggested two reference projects:
 
-1. LangChain Open Deep Research
+1. LangChain Open Deep Research  
 2. GPT Researcher
 
-The goal is not to copy either project, but to understand the common research patterns and decide what fits EquityScout.
+The objective is **not** to copy either repository.  
+The objective is to extract reusable deep-research patterns and adapt them to EquityScout’s evidence-first equity workflow.
 
 ---
 
-# 1. Open Deep Research
+## 1) LangChain Open Deep Research
 
-Repository:
-
+Repository:  
 https://github.com/langchain-ai/open_deep_research
 
-Open Deep Research is a configurable deep-research agent using LangGraph. It supports multiple LLM providers, search tools and MCP.
+Open Deep Research is a configurable deep-research system (LangGraph-based) with support for multiple model/tool providers and flexible orchestration patterns.
 
-One useful idea is that it separates LLM responsibilities:
+### Relevant ideas for EquityScout
 
-* Summarization
-* Research
-* Compression
-* Final report generation
+- Explicit workflow/state management for multi-step research
+- Model-role separation (e.g., summarization vs synthesis)
+- Search/tool abstraction layers
+- Structured outputs/tool-calling patterns
+- Parallelizable execution paths
+- Separation between evidence-gathering and report synthesis
 
-It also supports different search mechanisms and structured outputs/tool calling.
+### What to avoid for MVP
 
-### What I found useful
+- Copying full framework complexity
+- Premature multi-agent hierarchies
+- Broad MCP/tool ecosystem integration without clear MVP need
+- Over-configuring model roles before baseline quality is proven
 
-* Explicit research workflow/state
-* Search abstraction
-* Configurable models
-* Structured outputs
-* Parallel research
-* Separation of research and final report
-
-The repository also contains earlier plan-and-execute and multi-agent implementations, which are useful for understanding different approaches.
-
-### What we should avoid copying
-
-We don't need the complete Open Deep Research architecture.
-
-EquityScout has a much narrower domain, so adding every model role, MCP integration or multi-agent component would increase complexity without necessarily improving the MVP.
+**Conclusion:** Useful architectural patterns, but too general/expansive to adopt wholesale for a focused India-equity MVP.
 
 ---
 
-# 2. GPT Researcher
+## 2) GPT Researcher
 
-Repository:
-
+Repository:  
 https://github.com/assafelovic/gpt-researcher
 
-GPT Researcher follows a simple core pattern:
+GPT Researcher follows a simpler planning-driven pattern:
 
 ```text
 Query
@@ -62,185 +53,211 @@ Planner
   ↓
 Research Questions
   ↓
-Execution / Crawler Agents
+Execution / Crawling
   ↓
-Sources + Findings
+Findings + Sources
   ↓
 Publisher
   ↓
 Report
 ```
 
-The planner creates questions, execution agents gather information and track sources, and the publisher combines the findings into a report.
+### Relevant ideas for EquityScout
 
-It also supports parallel research and research over local documents.
+- Planner-driven decomposition into smaller research questions
+- Parallel execution of independent research branches
+- Source tracking during execution
+- Findings-first, then report synthesis
+- Straightforward end-to-end flow suitable for MVP velocity
 
-### What I found useful
+### Fit assessment
 
-This feels comparatively closer to our use case because our system also needs to:
+This pattern is closer to EquityScout’s near-term needs, because we also require:
 
-* Break company research into smaller questions
-* Research different areas independently
-* Gather evidence
-* Combine findings
-* Generate a final report
+- Structured question decomposition
+- Multi-pillar investigation
+- Evidence accumulation
+- Synthesis into an investment report
 
-For EquityScout, the research questions can become domain-specific:
-
-```text
-Business
-Financials
-Management / Promoters
-Moat
-Risks
-```
+**Conclusion:** Closer conceptual baseline for MVP orchestration.
 
 ---
 
-# 3. What Both Projects Have in Common
+## 3) Common Pattern Across Both
 
-The common pattern is:
+Both projects converge to the same high-level shape:
 
 ```text
 Planning
    ↓
-Research
+Research Execution
    ↓
-Retrieval / Sources
+Source Retrieval
    ↓
-Findings
+Findings/Evidence
    ↓
 Synthesis
    ↓
 Report
 ```
 
-So the main lesson is not to choose a framework simply because it is popular.
+### Primary takeaway
 
-The important idea is:
+> Deep research is a **process architecture**, not a single-prompt behavior.
 
-> **Deep research should be a structured process, not one LLM call.**
+This principle directly aligns with EquityScout’s evidence and citation requirements.
 
 ---
 
-# 4. Direction for EquityScout
-
-After studying both, I feel GPT Researcher is comparatively closer to our use case.
-
-I'm not suggesting that we copy it.
-
-My current proposal is:
+## 4) EquityScout Target Direction (MVP)
 
 ```text
 User Input
     ↓
-Company Resolution
+Company Resolution (India)
     ↓
 Research Planner / Orchestrator
     ↓
-Evidence / Extraction Store
+Task Execution (Business / Financials / Promoters)
     ↓
-Analysis
+Source Discovery + Selection
     ↓
-Investment Verdict
+Document Retrieval
     ↓
-Report
+Parse / Extract
     ↓
-Validation
+Evidence Store (+ citation metadata)
     ↓
-Final Markdown
+Analysis (claims)
+    ↓
+Verdict Engine
+    ↓
+Report Generator
+    ↓
+Claim/Citation Validation
+    ↓
+Final Markdown Report
 ```
 
-The **Research Orchestrator** would be the most important component because it can control:
+### Why the Orchestrator is central
 
-* Which research tasks are required
-* Which tasks can run in parallel
-* Which sources should be searched
-* Whether documents have already been processed
-* When enough evidence has been collected
-* How much LLM/retrieval work should be performed
+The orchestrator should control:
+
+- Task planning and sequencing
+- Parallelism limits
+- Source/provider selection policy
+- Caching and document reuse
+- Budget/time/call limits
+- Stopping conditions based on evidence sufficiency
+- Error handling and retry policy
 
 ---
 
-# 5. Ideas We Should Take
+## 5) What to Borrow (Pragmatically)
 
 ### From GPT Researcher
 
-* Planner → research questions
-* Parallel research
-* Source tracking
-* Research over documents
-* Findings → final report
+- Planner → research-question decomposition
+- Parallel branch execution
+- Source-aware findings collection
+- Findings-first report assembly
 
 ### From Open Deep Research
 
-* Model abstraction
-* Search abstraction
-* Structured outputs
-* Explicit research state
-* Configurable research workflow
+- Provider/model abstraction boundaries
+- Explicit research state handling
+- Structured outputs and typed intermediate artifacts
+- Configurable workflow controls
 
 ---
 
-# 6. Ideas We Should Add for Equity Research
+## 6) EquityScout-Specific Additions (Domain Requirements)
 
-The biggest difference is that EquityScout is domain-specific.
+Because EquityScout is equity-domain specific, it needs domain-aware logic absent in generic systems:
 
-The orchestrator should understand research pillars such as:
+1. **Research pillars**
+   - Business
+   - Financials
+   - Management/Promoters
+   - (Moat and risk as analysis outputs/perspectives)
 
-```text
-Business
-Financials
-Management / Promoters
-Moat
-Risks
-```
+2. **Authority-aware source ranking**
+   - Prioritize regulatory/exchange/company disclosures over generic web content
 
-We should also prioritize authoritative financial sources instead of treating every web source equally.
+3. **Strict evidence/claim separation**
+   - Sourced fact ≠ interpretation ≠ verdict
+
+4. **Citation traceability**
+   - Citation metadata must persist from extraction stage onward
+
+5. **Finance-aware conflict handling**
+   - Explicit policy for conflicting figures across documents/time periods
 
 ---
 
-# 7. Cost and Efficiency
+## 7) Cost and Efficiency Strategy
 
-Cost efficiency should be designed into the orchestrator.
-
-Potential mechanisms:
+The goal is not maximum search volume; it is sufficient high-quality evidence with minimal waste.
 
 ```text
 Research Task
      ↓
-Search
+Discovery/Retrieval
      ↓
-Evidence Check
-     ↓
-Enough evidence?
-   /       \
- Yes       No
- ↓          ↓
-Stop      Continue
+Evidence Coverage Check
+   /                 \
+Sufficient          Insufficient
+   ↓                    ↓
+Stop branch         Continue with constraints
 ```
 
-Additional mechanisms:
+### Core efficiency mechanisms
 
-* Caching
-* Deduplication
-* Reusing retrieved documents
-* Parallel execution
-* Model routing
-* Research budgets/caps
-
-The goal is not to maximize the number of searches or LLM calls.
-
-The goal is to obtain **sufficient high-quality evidence with minimum unnecessary work**.
+- Deduplication (URL/content hash)
+- Document reuse across pillars
+- Controlled parallelism
+- Model routing by task complexity
+- Budget/cap enforcement
+- Early stopping on diminishing evidence gain
 
 ---
 
-# 8. Initial Architectural Principle
+## 8) Recommended MVP Architectural Principle
 
-The current direction is:
+> Combine the strongest planning/execution patterns from both reference projects, then implement a simpler modular-monolith architecture optimized for India equity evidence workflows.
 
-> **Take the useful research concepts from Open Deep Research and GPT Researcher, then build a simpler, domain-specific architecture around EquityScout's requirements.**
+This means:
 
-Before implementation, the major decisions around the orchestrator, research budget, model routing, parallelism and stopping conditions should be reviewed and confirmed.
+- No framework copy-paste
+- No premature complexity
+- Strong pipeline boundaries
+- Evidence-first reliability over “agent sophistication”
 
-This will be the basis for breaking the project into MVP milestones and implementation tasks.
+---
+
+## 9) Decisions to Confirm Before/During Implementation
+
+The following are high-impact and should be explicitly reviewed:
+
+1. Orchestrator policy granularity (static templates vs adaptive planning)
+2. Evidence sufficiency threshold per pillar
+3. Stopping/budget strategy (time, token, source-depth caps)
+4. Concurrency strategy (global vs provider-scoped limits)
+5. Model routing strategy (single-model MVP vs multi-model routing)
+6. Conflict-resolution policy for inconsistent data points
+7. Citation validation strictness for “major claims”
+
+---
+
+## 10) Final Position
+
+GPT Researcher is the closer conceptual fit for MVP flow.  
+Open Deep Research contributes valuable abstraction/state ideas.
+
+EquityScout should synthesize both into a domain-specific, evidence-first architecture that prioritizes:
+
+1. Correctness  
+2. Traceability  
+3. Reliability  
+4. Cost efficiency  
+5. Maintainable extensibility

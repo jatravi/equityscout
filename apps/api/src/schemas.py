@@ -27,3 +27,16 @@ class ReportOut(BaseModel):
     runId: str
     markdown: str
     validationStatus: str
+
+class CompanyResolveRequest(BaseModel):
+    company: str
+
+
+class CompanyResolveResponse(BaseModel):
+    companyId: str
+    legalName: str
+    nseSymbol: Optional[str] = None
+    bseCode: Optional[str] = None
+    matchedAlias: Optional[str] = None
+    confidence: float
+    matchType: str

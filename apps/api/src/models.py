@@ -117,8 +117,6 @@ Index("ix_documents_source_id", Document.source_id)
 Index("ix_documents_fetched_at", Document.fetched_at)
 Index("ix_documents_parser_status", Document.parser_status)
 
-
-
 class ParsedDocument(Base):
     __tablename__ = "parsed_documents"
 
@@ -132,3 +130,34 @@ class ParsedDocument(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
+
+
+class Evidence(Base):
+    __tablename__ = "evidence"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("research_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    company_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("documents.id", ondelete="CASCADE"), nullable=False
+    )
+
+    evidence_type: Mapped[str] = mapped_column(Text, nullable=False)
+    key: Mapped[str] = mapped_column(Text, nullable=False)
+
+    value_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    value_num: Mapped[float | None] = mapped_column(Float, nullable=True)
+    value_unit: Mapped[str | None] = mapped_column(Text, nullable=True)
+    period: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.5)
+
+    locator_json: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    snippet: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())

@@ -102,3 +102,21 @@ class EvidenceItem(BaseModel):
 class EvidenceListResponse(BaseModel):
     runId: str
     items: list[EvidenceItem]
+
+class GenerateReportResponse(BaseModel):
+    runId: str
+    version: str
+    verdictLabel: str
+    verdictSummary: str
+    citationCount: int
+    reportMarkdown: str
+    createdAt: datetime | None = None
+
+class ReportResponse(BaseModel):
+    runId: str
+    version: str
+    verdictLabel: str
+    verdictSummary: str
+    citationCount: int
+    reportMarkdown: str
+    createdAt: datetime

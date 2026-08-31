@@ -161,3 +161,32 @@ class Evidence(Base):
     snippet: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+
+class Claim(Base):
+    __tablename__ = "claims"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("research_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    company_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+    )
+
+    claim_type: Mapped[str] = mapped_column(Text, nullable=False)
+    claim_text: Mapped[str] = mapped_column(Text, nullable=False)
+    stance: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.5)
+
+    contradiction_tag: Mapped[str] = mapped_column(Text, nullable=False, default="NONE")
+    contradiction_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    supporting_evidence_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    supporting_locators_json: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+

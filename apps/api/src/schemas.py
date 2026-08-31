@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pydantic import BaseModel
-from typing import Optional, List, Any
+from typing import Literal, Optional, List, Any
 from datetime import datetime
 
 class CreateResearchRunRequest(BaseModel):
@@ -72,3 +72,33 @@ class DocumentItem(BaseModel):
 class DocumentsListResponse(BaseModel):
     runId: str
     items: list[DocumentItem]
+
+EvidenceType = Literal["BUSINESS_SIGNAL", "FINANCIAL_METRIC", "PROMOTER_HOLDING"]
+
+class ExtractEvidenceResponse(BaseModel):
+    runId: str
+    processedDocuments: int
+    extracted: int
+    deduped: int
+    failedDocuments: int
+    countsByType: dict[str, int]
+
+class EvidenceItem(BaseModel):
+    evidenceId: str
+    runId: str
+    companyId: str
+    documentId: str
+    evidenceType: EvidenceType
+    key: str
+    valueText: str | None = None
+    valueNum: float | None = None
+    valueUnit: str | None = None
+    period: str | None = None
+    confidence: float
+    locator: dict[str, Any]
+    snippet: str | None = None
+    createdAt: datetime
+
+class EvidenceListResponse(BaseModel):
+    runId: str
+    items: list[EvidenceItem]

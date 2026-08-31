@@ -6,6 +6,7 @@ EquityScout is a staged research pipeline for equity analysis:
 - **Week 3:** Document retrieval, dedup, parsing, and persistence
 - **Week 4:** Evidence extraction v1 (business, financial, promoter)
 - **Week 5:** Claims analysis v1 (business/financial/promoter + contradictions + confidence)
+- **Week 6:** VerdictStrategy v1 + fixed-format report generation with inline citations
 
 ---
 
@@ -41,6 +42,7 @@ Apply all migration files in order:
 - `infra/db/migrations/004_parsed_documents.sql`
 - `infra/db/migrations/005_evidence_v1.sql`
 - `infra/db/migrations/006_claims_v1.sql`
+- `infra/db/migrations/007_reports_v1.sql`
 
 > If using `gen_random_uuid()`, ensure:
 ```sql
@@ -253,6 +255,70 @@ Each claim row includes:
 ---
 
 ## PowerShell quick run (Week 2 → Week 5)
+## Week 6 API Flow (verdict + report generation v1)
+
+### Generate report
+`POST /research-runs/{runId}/generate-report`
+
+Builds a narrative verdict and fixed-format markdown report from Week 5 claims (+ evidence references), then persists to `reports`.
+
+Optional query params:
+- `include_appendix=true|false` (default `true`)
+- `min_confidence=<float>`
+
+Response shape:
+
+```json
+{
+  "runId": "uuid",
+  "version": "v1",
+  "verdictLabel": "MIXED",
+  "verdictSummary": "Overall view is mixed based on supported claims...",
+  "citationCount": 12,
+  "reportMarkdown": "# EquityScout Research Report ...",
+  "createdAt": "2026-08-31T00:00:00Z"
+}
+```
+
+### Get latest report
+`GET /research-runs/{runId}/report`
+
+Returns latest persisted v1 report for the run.
+
+Response shape:
+
+```json
+{
+  "runId": "uuid",
+  "version": "v1",
+  "verdictLabel": "MIXED",
+  "verdictSummary": "Overall view is mixed based on supported claims...",
+  "citationCount": 12,
+  "reportMarkdown": "# EquityScout Research Report ...",
+  "createdAt": "2026-08-31T00:00:00Z"
+}
+```
+
+### Fixed report sections (MVP)
+Generated markdown includes:
+
+1. `# EquityScout Research Report`
+2. `## Company Snapshot`
+3. `## Business Model & Segment Direction`
+4. `## Financial Trend Commentary`
+5. `## Promoter & Governance Observations`
+6. `## Key Contradictions & Data Quality Notes`
+7. `## Verdict`
+8. `## Appendix: Evidence References` (when `include_appendix=true`)
+
+### Citation format
+- Inline markers in narrative: `[E1]`, `[E2]`, ...
+- Appendix mapping:
+  - `[E1] <title/key> — <canonical_url> (snippet: "...")`
+
+---
+
+## PowerShell quick run (Week 2 → Week 6)
 
 ```powershell
 $body = @{ company = "Reliance Industries" } | ConvertTo-Json
@@ -290,6 +356,13 @@ Invoke-RestMethod -Method POST `
 
 Invoke-RestMethod -Method GET `
   -Uri "http://127.0.0.1:8000/research-runs/$runId/claims"
+
+# Week 6
+Invoke-RestMethod -Method POST `
+  -Uri "http://127.0.0.1:8000/research-runs/$runId/generate-report?include_appendix=true"
+
+Invoke-RestMethod -Method GET `
+  -Uri "http://127.0.0.1:8000/research-runs/$runId/report"
 ```
 
 ---
@@ -307,6 +380,9 @@ pytest -q apps/api/tests/test_week5_claims_flow.py
 ```
 
 Expected (current): all passing for Week 1–5 flow.
+
+pytest -q apps/api/tests/test_week6_report_flow.py
+```
 
 ---
 
@@ -339,3 +415,12 @@ Expected (current): all passing for Week 1–5 flow.
 - [x] Confidence scoring
 - [x] `/build-claims` and `/claims` endpoints
 - [x] End-to-end Week 5 flow test
+- [x] End-to-end Week 5 flow test
+
+### Week 6
+- [x] VerdictStrategy v1 (narrative-first)
+- [x] Fixed MVP report sections
+- [x] Inline citation markers in markdown
+- [x] Appendix evidence reference mapping
+- [x] `/generate-report` and `/report` endpoints
+- [x] End-to-end Week 6 flow test

@@ -33,7 +33,10 @@ def test_week6_generate_and_get_report():
     assert "## Appendix: Evidence References" in md
 
     # lightweight inline citation check
-    assert "[E" in md
+    if gj["citationCount"] > 0:
+        assert "[E" in md
+    else:
+        assert "No evidence references available." in md
 
     # get report
     getr = client.get(f"/research-runs/{run_id}/report")

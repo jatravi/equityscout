@@ -147,8 +147,8 @@ class Evidence(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
-class Report(Base):
-    __tablename__ = "reports"
+class Claim(Base):
+    __tablename__ = "claims"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
@@ -159,7 +159,6 @@ class Report(Base):
         UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
     )
 
-<<<<<<< HEAD
     claim_type: Mapped[str] = mapped_column(Text, nullable=False)
     claim_text: Mapped[str] = mapped_column(Text, nullable=False)
     stance: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -174,8 +173,18 @@ class Report(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
+class Report(Base):
+    __tablename__ = "reports"
 
-=======
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("research_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    company_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+    )
+
     version: Mapped[str] = mapped_column(Text, nullable=False, default="v1")
     verdict_label: Mapped[str] = mapped_column(Text, nullable=False)
     verdict_summary: Mapped[str] = mapped_column(Text, nullable=False)
@@ -186,4 +195,3 @@ class Report(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
     )
->>>>>>> 4fe960e (feat(report): implement report generation and retrieval functionality)

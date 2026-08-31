@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from apps.api.src.routes.research_runs import router as research_runs_router
 from apps.api.src.routes.reports import router as reports_router
 from apps.api.src.routes.discovery import router as discovery_router

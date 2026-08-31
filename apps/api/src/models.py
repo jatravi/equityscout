@@ -47,7 +47,6 @@ class Source(Base):
     rank_score = Column(Float, nullable=True)
     metadata_json = Column(JSONB, nullable=True)
 
-
 class ResearchRun(Base):
     __tablename__ = "research_runs"
 
@@ -60,7 +59,6 @@ class ResearchRun(Base):
     error_message = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-
 class ResearchTask(Base):
     __tablename__ = "research_tasks"
 
@@ -68,17 +66,6 @@ class ResearchTask(Base):
     run_id = Column(UUID(as_uuid=True), ForeignKey("research_runs.id"), nullable=False)
     task_type = Column(String, nullable=False)
     status = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class Report(Base):
-    __tablename__ = "reports"
-
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    run_id = Column(UUID(as_uuid=True), ForeignKey("research_runs.id"), nullable=False, unique=True)
-    markdown = Column(Text, nullable=False)
-    validation_status = Column(String, nullable=False, default="PENDING")
-    version = Column(Integer, nullable=False, default=1)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class Document(Base):
@@ -107,7 +94,6 @@ class Document(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
 
-
 Index("ux_documents_company_canonical_url", Document.company_id, Document.canonical_url, unique=True)
 # Enable only if you chose global hash dedupe:
 # Index("ux_documents_content_hash", Document.content_hash, unique=True)
@@ -130,7 +116,6 @@ class ParsedDocument(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
-
 
 class Evidence(Base):
     __tablename__ = "evidence"
@@ -162,9 +147,8 @@ class Evidence(Base):
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
-
-class Claim(Base):
-    __tablename__ = "claims"
+class Report(Base):
+    __tablename__ = "reports"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
@@ -175,6 +159,7 @@ class Claim(Base):
         UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
     )
 
+<<<<<<< HEAD
     claim_type: Mapped[str] = mapped_column(Text, nullable=False)
     claim_text: Mapped[str] = mapped_column(Text, nullable=False)
     stance: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -190,3 +175,15 @@ class Claim(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 
 
+=======
+    version: Mapped[str] = mapped_column(Text, nullable=False, default="v1")
+    verdict_label: Mapped[str] = mapped_column(Text, nullable=False)
+    verdict_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    report_markdown: Mapped[str] = mapped_column(Text, nullable=False)
+    citation_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
+    )
+>>>>>>> 4fe960e (feat(report): implement report generation and retrieval functionality)

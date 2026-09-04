@@ -131,3 +131,20 @@ class ClaimItem(BaseModel):
 class ClaimsListResponse(BaseModel):
     runId: str
     items: list[ClaimItem]
+class GenerateReportResponse(BaseModel):
+    runId: str
+    version: str
+    verdictLabel: str
+    verdictSummary: str
+    citationCount: int
+    reportMarkdown: str
+    createdAt: datetime | None = None
+
+class ReportResponse(BaseModel):
+    runId: str
+    version: str
+    verdictLabel: str
+    verdictSummary: str
+    citationCount: int
+    reportMarkdown: str
+    createdAt: datetime

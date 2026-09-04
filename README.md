@@ -254,7 +254,10 @@ Each claim row includes:
 
 ---
 
+<<<<<<< HEAD
 ## PowerShell quick run (Week 2 → Week 5)
+=======
+>>>>>>> 0e04efcdd46e640ac289bda365be6de9ad6f7b27
 ## Week 6 API Flow (verdict + report generation v1)
 
 ### Generate report
@@ -377,6 +380,7 @@ pytest -q apps/api/tests/test_week2_flow.py
 pytest -q apps/api/tests/test_week3_flow.py
 pytest -q apps/api/tests/test_week4_evidence_flow.py
 pytest -q apps/api/tests/test_week5_claims_flow.py
+<<<<<<< HEAD
 ```
 
 Expected (current): all passing for Week 1–5 flow.
@@ -384,6 +388,11 @@ Expected (current): all passing for Week 1–5 flow.
 pytest -q apps/api/tests/test_week6_report_flow.py
 ```
 
+=======
+pytest -q apps/api/tests/test_week6_report_flow.py
+```
+
+>>>>>>> 0e04efcdd46e640ac289bda365be6de9ad6f7b27
 ---
 
 ## Milestone checklists
@@ -423,4 +432,5 @@ pytest -q apps/api/tests/test_week6_report_flow.py
 - [x] Inline citation markers in markdown
 - [x] Appendix evidence reference mapping
 - [x] `/generate-report` and `/report` endpoints
+- [x] End-to-end Week 6 flow test
 - [x] End-to-end Week 6 flow test

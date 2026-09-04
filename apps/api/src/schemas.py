@@ -102,3 +102,32 @@ class EvidenceItem(BaseModel):
 class EvidenceListResponse(BaseModel):
     runId: str
     items: list[EvidenceItem]
+
+
+ClaimType = Literal["BUSINESS_MODEL", "FINANCIAL_TREND", "PROMOTER_GOVERNANCE"]
+ContradictionTag = Literal["NONE", "INTRA_DOC", "CROSS_DOC", "METRIC_CONFLICT"]
+
+class BuildClaimsResponse(BaseModel):
+    runId: str
+    totalClaims: int
+    countsByType: dict[str, int]
+    contradictionCounts: dict[str, int]
+    avgConfidence: float
+
+class ClaimItem(BaseModel):
+    claimId: str
+    runId: str
+    companyId: str
+    claimType: ClaimType
+    claimText: str
+    stance: str | None = None
+    confidence: float
+    contradictionTag: ContradictionTag
+    contradictionNote: str | None = None
+    supportingEvidenceCount: int
+    supportingLocators: list[dict[str, Any]]
+    createdAt: datetime
+
+class ClaimsListResponse(BaseModel):
+    runId: str
+    items: list[ClaimItem]

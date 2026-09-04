@@ -5,6 +5,7 @@ EquityScout is a staged research pipeline for equity analysis:
 - **Week 2:** India company resolution + source discovery/ranking
 - **Week 3:** Document retrieval, dedup, parsing, and persistence
 - **Week 4:** Evidence extraction v1 (business, financial, promoter)
+- **Week 5:** Claims analysis v1 (business/financial/promoter + contradictions + confidence)
 
 ---
 
@@ -39,6 +40,7 @@ Apply all migration files in order:
 - `infra/db/migrations/003_documents_dedup.sql`
 - `infra/db/migrations/004_parsed_documents.sql`
 - `infra/db/migrations/005_evidence_v1.sql`
+- `infra/db/migrations/006_claims_v1.sql`
 
 > If using `gen_random_uuid()`, ensure:
 ```sql
@@ -194,7 +196,63 @@ Each evidence row includes:
 
 ---
 
-## PowerShell quick run (Week 2 → Week 4)
+## Week 5 API Flow (claims analysis v1)
+
+### Build claims
+`POST /research-runs/{runId}/build-claims`
+
+Generates claims from extracted evidence and persists rows into `claims`.
+
+Claim categories:
+1. **Business model + segment direction** (`BUSINESS_MODEL`)
+2. **Financial trend commentary** (`FINANCIAL_TREND`)
+3. **Promoter/governance observations** (`PROMOTER_GOVERNANCE`)
+
+Also performs:
+- contradiction tagging (`NONE`, `INTRA_DOC`, `CROSS_DOC`, `METRIC_CONFLICT`)
+- deterministic confidence scoring (`0.0–1.0`)
+
+Response shape:
+
+```json
+{
+  "runId": "uuid",
+  "totalClaims": 14,
+  "countsByType": {
+    "BUSINESS_MODEL": 4,
+    "FINANCIAL_TREND": 7,
+    "PROMOTER_GOVERNANCE": 3
+  },
+  "contradictionCounts": {
+    "NONE": 11,
+    "INTRA_DOC": 0,
+    "CROSS_DOC": 1,
+    "METRIC_CONFLICT": 2
+  },
+  "avgConfidence": 0.67
+}
+```
+
+### List claims
+`GET /research-runs/{runId}/claims`
+
+Optional filters:
+- `?claim_type=BUSINESS_MODEL|FINANCIAL_TREND|PROMOTER_GOVERNANCE`
+- `?min_confidence=0.6`
+- `?contradiction_tag=NONE|INTRA_DOC|CROSS_DOC|METRIC_CONFLICT`
+
+Each claim row includes:
+- `claimId`, `runId`, `companyId`
+- `claimType`, `claimText`, `stance`
+- `confidence`
+- `contradictionTag`, `contradictionNote`
+- `supportingEvidenceCount`
+- `supportingLocators`
+- `createdAt`
+
+---
+
+## PowerShell quick run (Week 2 → Week 5)
 
 ```powershell
 $body = @{ company = "Reliance Industries" } | ConvertTo-Json
@@ -225,6 +283,13 @@ Invoke-RestMethod -Method POST `
 
 Invoke-RestMethod -Method GET `
   -Uri "http://127.0.0.1:8000/research-runs/$runId/evidence"
+
+# Week 5
+Invoke-RestMethod -Method POST `
+  -Uri "http://127.0.0.1:8000/research-runs/$runId/build-claims"
+
+Invoke-RestMethod -Method GET `
+  -Uri "http://127.0.0.1:8000/research-runs/$runId/claims"
 ```
 
 ---
@@ -238,9 +303,10 @@ pytest -q apps/api/tests/test_week1_flow.py
 pytest -q apps/api/tests/test_week2_flow.py
 pytest -q apps/api/tests/test_week3_flow.py
 pytest -q apps/api/tests/test_week4_evidence_flow.py
+pytest -q apps/api/tests/test_week5_claims_flow.py
 ```
 
-Expected (current): all passing.
+Expected (current): all passing for Week 1–5 flow.
 
 ---
 
@@ -265,4 +331,11 @@ Expected (current): all passing.
 - [x] Promoter/shareholding extraction (basic)
 - [x] Evidence persisted with required document locator
 - [x] `/extract-evidence` and `/evidence` endpoints
-```
+
+### Week 5
+- [x] Claims built from Week 4 evidence
+- [x] Business/financial/promoter claim categories
+- [x] Contradiction tagging
+- [x] Confidence scoring
+- [x] `/build-claims` and `/claims` endpoints
+- [x] End-to-end Week 5 flow test

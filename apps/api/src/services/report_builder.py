@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from time import time
+import time
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from apps.api.src.models import ResearchRun, Claim, Evidence, Report
 from apps.api.src.services.verdict_strategy import build_verdict_v1
+from apps.api.src.services.report_validator import validate_report_citations
+from apps.api.src.services.diagnostics_service import upsert_run_diagnostics
 
 
 def _build_citation_index(evidence_rows: list[Evidence]) -> tuple[dict[str, str], list[str]]:
@@ -54,6 +59,8 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
 
     eq = db.query(Evidence).filter(Evidence.run_id == run.id).order_by(Evidence.created_at.desc())
     evidence_rows = eq.all()
+
+    t0 = time.time()
 
     verdict = build_verdict_v1(claims)
 
@@ -145,12 +152,18 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
     markdown = "\n".join(report_lines)
     citation_count = len(citation_map)
 
+    validation = validate_report_citations(markdown)
+    validation_status = "VALID" if validation["isValid"] else "INVALID"
+
     existing = db.query(Report).filter(Report.run_id == run.id, Report.version == version).first()
     if existing:
         existing.verdict_label = verdict["verdict_label"]
         existing.verdict_summary = verdict["verdict_summary"]
         existing.report_markdown = markdown
         existing.citation_count = citation_count
+        existing.validation_status = validation_status
+        existing.validation_errors_json = validation["errors"]
+        existing.validated_at = func.now()
         db.add(existing)
         db.commit()
         db.refresh(existing)
@@ -164,10 +177,20 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
             verdict_summary=verdict["verdict_summary"],
             report_markdown=markdown,
             citation_count=citation_count,
+            validation_status=validation_status,
+            validation_errors_json=validation["errors"],
+            validated_at=func.now(),
         )
         db.add(saved)
         db.commit()
         db.refresh(saved)
+
+    elapsed_ms = int((time.time() - t0) * 1000)
+    upsert_run_diagnostics(
+        db=db,
+        run_id=run_id,
+        report_ms=elapsed_ms,
+    )
 
     return {
         "runId": str(run.id),
@@ -177,4 +200,7 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
         "citationCount": int(saved.citation_count),
         "reportMarkdown": saved.report_markdown,
         "createdAt": saved.created_at,
+        "validationStatus": validation_status,
+        "validation": validation,
     }
+

@@ -7,6 +7,7 @@ EquityScout is a staged research pipeline for equity analysis:
 - **Week 4:** Evidence extraction v1 (business, financial, promoter)
 - **Week 5:** Claims analysis v1 (business/financial/promoter + contradictions + confidence)
 - **Week 6:** VerdictStrategy v1 + fixed-format report generation with inline citations
+- **Week 7:** Validation + reliability hardening (claim-citation validation + diagnostics)
 
 ---
 
@@ -43,6 +44,7 @@ Apply all migration files in order:
 - `infra/db/migrations/005_evidence_v1.sql`
 - `infra/db/migrations/006_claims_v1.sql`
 - `infra/db/migrations/007_reports_v1.sql`
+- `infra/db/migrations/008_run_diagnostics_and_report_validation.sql`
 
 > If using `gen_random_uuid()`, ensure:
 ```sql
@@ -144,42 +146,6 @@ Each item includes:
 
 Runs extractors on parsed docs and persists rows into `evidence`.
 
-Extractors included:
-1. **Business summary signals**
-   - capacity/expansion
-   - order wins/contracts
-   - capex mentions
-   - guidance/outlook
-   - regulatory/legal cues
-
-2. **Financial metrics (basic set)**
-   - revenue
-   - net profit / PAT
-   - operating/EBITDA margin
-   - debt
-   - operating cash flow
-
-3. **Promoter/shareholding basics**
-   - promoter holding %
-   - pledge indicator mentions
-
-Response shape:
-
-```json
-{
-  "runId": "uuid",
-  "processedDocuments": 8,
-  "extracted": 27,
-  "deduped": 5,
-  "failedDocuments": 0,
-  "countsByType": {
-    "BUSINESS_SIGNAL": 10,
-    "FINANCIAL_METRIC": 12,
-    "PROMOTER_HOLDING": 5
-  }
-}
-```
-
 ### List evidence
 `GET /research-runs/{runId}/evidence`
 
@@ -187,14 +153,6 @@ Optional filter:
 - `?evidence_type=BUSINESS_SIGNAL`
 - `?evidence_type=FINANCIAL_METRIC`
 - `?evidence_type=PROMOTER_HOLDING`
-
-Each evidence row includes:
-- `evidenceId`, `runId`, `companyId`, `documentId`
-- `evidenceType`, `key`
-- `valueText`, `valueNum`, `valueUnit`, `period`
-- `confidence`
-- `locator` (**required traceability field**)
-- `snippet`, `createdAt`
 
 ---
 
@@ -205,36 +163,6 @@ Each evidence row includes:
 
 Generates claims from extracted evidence and persists rows into `claims`.
 
-Claim categories:
-1. **Business model + segment direction** (`BUSINESS_MODEL`)
-2. **Financial trend commentary** (`FINANCIAL_TREND`)
-3. **Promoter/governance observations** (`PROMOTER_GOVERNANCE`)
-
-Also performs:
-- contradiction tagging (`NONE`, `INTRA_DOC`, `CROSS_DOC`, `METRIC_CONFLICT`)
-- deterministic confidence scoring (`0.0–1.0`)
-
-Response shape:
-
-```json
-{
-  "runId": "uuid",
-  "totalClaims": 14,
-  "countsByType": {
-    "BUSINESS_MODEL": 4,
-    "FINANCIAL_TREND": 7,
-    "PROMOTER_GOVERNANCE": 3
-  },
-  "contradictionCounts": {
-    "NONE": 11,
-    "INTRA_DOC": 0,
-    "CROSS_DOC": 1,
-    "METRIC_CONFLICT": 2
-  },
-  "avgConfidence": 0.67
-}
-```
-
 ### List claims
 `GET /research-runs/{runId}/claims`
 
@@ -243,85 +171,58 @@ Optional filters:
 - `?min_confidence=0.6`
 - `?contradiction_tag=NONE|INTRA_DOC|CROSS_DOC|METRIC_CONFLICT`
 
-Each claim row includes:
-- `claimId`, `runId`, `companyId`
-- `claimType`, `claimText`, `stance`
-- `confidence`
-- `contradictionTag`, `contradictionNote`
-- `supportingEvidenceCount`
-- `supportingLocators`
-- `createdAt`
-
 ---
 
-<<<<<<< HEAD
-## PowerShell quick run (Week 2 → Week 5)
-=======
->>>>>>> 0e04efcdd46e640ac289bda365be6de9ad6f7b27
 ## Week 6 API Flow (verdict + report generation v1)
 
 ### Generate report
 `POST /research-runs/{runId}/generate-report`
 
-Builds a narrative verdict and fixed-format markdown report from Week 5 claims (+ evidence references), then persists to `reports`.
-
 Optional query params:
 - `include_appendix=true|false` (default `true`)
 - `min_confidence=<float>`
 
-Response shape:
-
-```json
-{
-  "runId": "uuid",
-  "version": "v1",
-  "verdictLabel": "MIXED",
-  "verdictSummary": "Overall view is mixed based on supported claims...",
-  "citationCount": 12,
-  "reportMarkdown": "# EquityScout Research Report ...",
-  "createdAt": "2026-08-31T00:00:00Z"
-}
-```
-
 ### Get latest report
 `GET /research-runs/{runId}/report`
 
-Returns latest persisted v1 report for the run.
+---
 
-Response shape:
+## Week 7 API Flow (validation + diagnostics)
 
-```json
-{
-  "runId": "uuid",
-  "version": "v1",
-  "verdictLabel": "MIXED",
-  "verdictSummary": "Overall view is mixed based on supported claims...",
-  "citationCount": 12,
-  "reportMarkdown": "# EquityScout Research Report ...",
-  "createdAt": "2026-08-31T00:00:00Z"
-}
-```
+### Report validation behavior
+`POST /research-runs/{runId}/generate-report`
 
-### Fixed report sections (MVP)
-Generated markdown includes:
+Week 7 adds:
+- key-claim citation validation
+- graceful degradation messages for low/no evidence
+- validation payload in response
 
-1. `# EquityScout Research Report`
-2. `## Company Snapshot`
-3. `## Business Model & Segment Direction`
-4. `## Financial Trend Commentary`
-5. `## Promoter & Governance Observations`
-6. `## Key Contradictions & Data Quality Notes`
-7. `## Verdict`
-8. `## Appendix: Evidence References` (when `include_appendix=true`)
+Additional response fields:
+- `validationStatus`: `VALID | INVALID | PENDING`
+- `validation`:
+  - `isValid`
+  - `uncitedClaimCount`
+  - `errors[]`
 
-### Citation format
-- Inline markers in narrative: `[E1]`, `[E2]`, ...
-- Appendix mapping:
-  - `[E1] <title/key> — <canonical_url> (snippet: "...")`
+### Run diagnostics
+`GET /research-runs/{runId}/diagnostics`
+
+Returns per-run reliability/quality metrics:
+- token/cost snapshot:
+  - `tokenInput`, `tokenOutput`, `estimatedCost`
+- source reliability:
+  - `sourcesTotal`, `sourcesSuccess`, `sourceSuccessRate`
+- parser reliability:
+  - `docsTotal`, `docsParsed`, `parserFailureRate`
+- output quality:
+  - `evidenceCount`, `claimsCount`, `citationCount`
+  - `reportValidationStatus`, `validationErrorCount`
+- timing:
+  - `discoverMs`, `ingestMs`, `extractMs`, `claimsMs`, `reportMs`
 
 ---
 
-## PowerShell quick run (Week 2 → Week 6)
+## PowerShell quick run (Week 2 → Week 7)
 
 ```powershell
 $body = @{ company = "Reliance Industries" } | ConvertTo-Json
@@ -332,40 +233,13 @@ $run = Invoke-RestMethod -Method POST `
 
 $runId = $run.runId
 
-# Week 2
-Invoke-RestMethod -Method POST `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/discover-sources"
-
-Invoke-RestMethod -Method GET `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/sources"
-
-# Week 3
-Invoke-RestMethod -Method POST `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/ingest-docs"
-
-Invoke-RestMethod -Method GET `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/documents"
-
-# Week 4
-Invoke-RestMethod -Method POST `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/extract-evidence"
-
-Invoke-RestMethod -Method GET `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/evidence"
-
-# Week 5
-Invoke-RestMethod -Method POST `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/build-claims"
-
-Invoke-RestMethod -Method GET `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/claims"
-
-# Week 6
-Invoke-RestMethod -Method POST `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/generate-report?include_appendix=true"
-
-Invoke-RestMethod -Method GET `
-  -Uri "http://127.0.0.1:8000/research-runs/$runId/report"
+Invoke-RestMethod -Method POST -Uri "http://127.0.0.1:8000/research-runs/$runId/discover-sources"
+Invoke-RestMethod -Method POST -Uri "http://127.0.0.1:8000/research-runs/$runId/ingest-docs"
+Invoke-RestMethod -Method POST -Uri "http://127.0.0.1:8000/research-runs/$runId/extract-evidence"
+Invoke-RestMethod -Method POST -Uri "http://127.0.0.1:8000/research-runs/$runId/build-claims"
+Invoke-RestMethod -Method POST -Uri "http://127.0.0.1:8000/research-runs/$runId/generate-report?include_appendix=true"
+Invoke-RestMethod -Method GET  -Uri "http://127.0.0.1:8000/research-runs/$runId/report"
+Invoke-RestMethod -Method GET  -Uri "http://127.0.0.1:8000/research-runs/$runId/diagnostics"
 ```
 
 ---
@@ -380,19 +254,10 @@ pytest -q apps/api/tests/test_week2_flow.py
 pytest -q apps/api/tests/test_week3_flow.py
 pytest -q apps/api/tests/test_week4_evidence_flow.py
 pytest -q apps/api/tests/test_week5_claims_flow.py
-<<<<<<< HEAD
-```
-
-Expected (current): all passing for Week 1–5 flow.
-
 pytest -q apps/api/tests/test_week6_report_flow.py
+pytest -q apps/api/tests/test_week7_validation_and_diagnostics_flow.py
 ```
 
-=======
-pytest -q apps/api/tests/test_week6_report_flow.py
-```
-
->>>>>>> 0e04efcdd46e640ac289bda365be6de9ad6f7b27
 ---
 
 ## Milestone checklists
@@ -411,26 +276,23 @@ pytest -q apps/api/tests/test_week6_report_flow.py
 - [x] Raw + parsed artifacts persisted/queryable
 
 ### Week 4
-- [x] Business evidence extraction
-- [x] Financial metrics extraction (basic set)
-- [x] Promoter/shareholding extraction (basic)
-- [x] Evidence persisted with required document locator
+- [x] Evidence extraction and persistence
 - [x] `/extract-evidence` and `/evidence` endpoints
 
 ### Week 5
-- [x] Claims built from Week 4 evidence
-- [x] Business/financial/promoter claim categories
-- [x] Contradiction tagging
-- [x] Confidence scoring
+- [x] Claims built from evidence
+- [x] Contradiction tagging + confidence scoring
 - [x] `/build-claims` and `/claims` endpoints
-- [x] End-to-end Week 5 flow test
 - [x] End-to-end Week 5 flow test
 
 ### Week 6
-- [x] VerdictStrategy v1 (narrative-first)
-- [x] Fixed MVP report sections
-- [x] Inline citation markers in markdown
-- [x] Appendix evidence reference mapping
+- [x] VerdictStrategy v1
+- [x] Fixed-format report with inline citations
 - [x] `/generate-report` and `/report` endpoints
 - [x] End-to-end Week 6 flow test
-- [x] End-to-end Week 6 flow test
+
+### Week 7
+- [x] Claim-citation validator
+- [x] Graceful degradation messaging
+- [x] Diagnostics endpoint (`/research-runs/{runId}/diagnostics`)
+- [x] Validation + diagnostics flow test

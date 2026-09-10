@@ -8,6 +8,7 @@ from apps.api.src.routes.documents import router as documents_router
 from apps.api.src.routes.evidence import router as evidence_router
 from apps.api.src.routes.claims import router as claims_router
 from apps.api.src.routes.report import router as report_router
+from apps.api.src.routes.diagnostics import router as diagnostics_router
 
 app = FastAPI(title="EquityScout API", version="0.1.0")
 
@@ -19,6 +20,7 @@ app.include_router(documents_router, tags=["documents"])
 app.include_router(evidence_router, tags=["evidence"])
 app.include_router(claims_router, tags=["claims"])
 app.include_router(report_router, tags=["report"])
+app.include_router(diagnostics_router, tags=["diagnostics"])
 
 @app.get("/health")
 def health():

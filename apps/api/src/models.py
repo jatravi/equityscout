@@ -195,3 +195,51 @@ class Report(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
     )
+
+    validation_status: Mapped[str] = mapped_column(Text, nullable=False, default="PENDING")
+    validation_errors_json: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    validated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now()
+    )
+
+class RunDiagnostics(Base):
+    __tablename__ = "run_diagnostics"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    run_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("research_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    company_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+    )
+
+    token_input: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    token_output: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    estimated_cost: Mapped[float] = mapped_column(Numeric(12, 6), nullable=False, default=0)
+
+    sources_total: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    sources_success: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    source_success_rate: Mapped[float] = mapped_column(Numeric(6, 3), nullable=False, default=0)
+
+    docs_total: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    docs_parsed: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    parser_failure_rate: Mapped[float] = mapped_column(Numeric(6, 3), nullable=False, default=0)
+
+    evidence_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    claims_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    citation_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    report_validation_status: Mapped[str] = mapped_column(Text, nullable=False, default="PENDING")
+    validation_error_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    discover_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    ingest_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    extract_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    claims_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    report_ms: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())

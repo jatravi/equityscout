@@ -131,6 +131,7 @@ class ClaimItem(BaseModel):
 class ClaimsListResponse(BaseModel):
     runId: str
     items: list[ClaimItem]
+
 class GenerateReportResponse(BaseModel):
     runId: str
     version: str
@@ -139,6 +140,8 @@ class GenerateReportResponse(BaseModel):
     citationCount: int
     reportMarkdown: str
     createdAt: datetime | None = None
+    validationStatus: str
+    validation: ReportValidationResult
 
 class ReportResponse(BaseModel):
     runId: str
@@ -148,3 +151,46 @@ class ReportResponse(BaseModel):
     citationCount: int
     reportMarkdown: str
     createdAt: datetime
+
+class ReportValidationError(BaseModel):
+    section: str
+    lineIndex: int
+    message: str
+    claimText: str | None = None
+
+class ReportValidationResult(BaseModel):
+    isValid: bool
+    uncitedClaimCount: int
+    errors: list[ReportValidationError]
+
+class RunDiagnosticsResponse(BaseModel):
+    runId: str
+    companyId: str
+
+    tokenInput: int
+    tokenOutput: int
+    estimatedCost: float
+
+    sourcesTotal: int
+    sourcesSuccess: int
+    sourceSuccessRate: float
+
+    docsTotal: int
+    docsParsed: int
+    parserFailureRate: float
+
+    evidenceCount: int
+    claimsCount: int
+    citationCount: int
+
+    reportValidationStatus: str
+    validationErrorCount: int
+
+    discoverMs: int
+    ingestMs: int
+    extractMs: int
+    claimsMs: int
+    reportMs: int
+
+    createdAt: datetime
+    updatedAt: datetime

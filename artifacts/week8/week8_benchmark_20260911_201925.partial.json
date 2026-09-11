@@ -1,0 +1,934 @@
+{
+  "generatedAt": "2026-09-11T14:51:25.958432+00:00",
+  "summary": {
+    "totalCompanies": 5,
+    "successfulRuns": 4,
+    "failedRuns": 1,
+    "successRate": 0.8,
+    "metrics": {
+      "runtimeMs": {
+        "count": 4,
+        "mean": 65.0,
+        "median": 58.0,
+        "min": 53.0,
+        "max": 91.0
+      },
+      "citationCount": {
+        "count": 4,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "unsupportedClaimRate": {
+        "count": 4,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "sourceSuccessRate": {
+        "count": 4,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "parserFailureRate": {
+        "count": 4,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "estimatedCost": {
+        "count": 4,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      }
+    },
+    "failureBuckets": {
+      "ingest": 1
+    }
+  },
+  "results": [
+    {
+      "company": "Reliance Industries",
+      "run_id": "2f857a39-1a52-4990-b124-15b48c5fb110",
+      "started_at": "2026-09-11T14:49:25.588519+00:00",
+      "finished_at": "2026-09-11T14:49:25.694232+00:00",
+      "ok": true,
+      "failure_stage": null,
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 33,
+          "error": null
+        },
+        {
+          "stage": "discover",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 16,
+          "error": null
+        },
+        {
+          "stage": "ingest",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 5,
+          "error": null
+        },
+        {
+          "stage": "extract",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 6,
+          "error": null
+        },
+        {
+          "stage": "claims",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 5,
+          "error": null
+        },
+        {
+          "stage": "report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 26,
+          "error": null
+        },
+        {
+          "stage": "get_report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        },
+        {
+          "stage": "get_diagnostics",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        }
+      ],
+      "report_summary": {
+        "version": "v1",
+        "verdictLabel": "CAUTIOUS",
+        "citationCount": 0,
+        "reportMarkdownLength": 849
+      },
+      "diagnostics": {
+        "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+        "companyId": "0a79a134-ace8-4ce8-9377-bcc85dad61b1",
+        "tokenInput": 0,
+        "tokenOutput": 0,
+        "estimatedCost": 0.0,
+        "sourcesTotal": 0,
+        "sourcesSuccess": 0,
+        "sourceSuccessRate": 0.0,
+        "docsTotal": 0,
+        "docsParsed": 0,
+        "parserFailureRate": 0.0,
+        "evidenceCount": 0,
+        "claimsCount": 0,
+        "citationCount": 0,
+        "reportValidationStatus": "VALID",
+        "validationErrorCount": 0,
+        "discoverMs": 0,
+        "ingestMs": 0,
+        "extractMs": 0,
+        "claimsMs": 0,
+        "reportMs": 3,
+        "createdAt": "2026-09-11T20:19:25.665821+05:30",
+        "updatedAt": "2026-09-11T20:19:25.665821+05:30"
+      },
+      "raw": {
+        "create_run": {
+          "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+          "status": "PENDING",
+          "company": "Reliance Industries"
+        },
+        "steps": {
+          "discover": {
+            "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+            "company": "Reliance Industries",
+            "resolvedMatchType": "EXACT_LEGAL_NAME",
+            "totalDiscovered": 0,
+            "totalUpdated": 12,
+            "countsBySourceType": {
+              "NSE_ANNOUNCEMENT": 3,
+              "NSE_RESULTS": 3,
+              "BSE_FILING": 3,
+              "COMPANY_IR": 3
+            }
+          },
+          "ingest": {
+            "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+            "totalSources": 0,
+            "fetched": 0,
+            "deduped": 0,
+            "parsed": 0,
+            "failed": 0
+          },
+          "extract": {
+            "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+            "processedDocuments": 0,
+            "extracted": 0,
+            "deduped": 0,
+            "failedDocuments": 0,
+            "countsByType": {
+              "BUSINESS_SIGNAL": 0,
+              "FINANCIAL_METRIC": 0,
+              "PROMOTER_HOLDING": 0
+            }
+          },
+          "claims": {
+            "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+            "totalClaims": 0,
+            "countsByType": {
+              "BUSINESS_MODEL": 0,
+              "FINANCIAL_TREND": 0,
+              "PROMOTER_GOVERNANCE": 0
+            },
+            "contradictionCounts": {
+              "NONE": 0,
+              "INTRA_DOC": 0,
+              "CROSS_DOC": 0,
+              "METRIC_CONFLICT": 0
+            },
+            "avgConfidence": 0.0
+          },
+          "report": {
+            "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+            "version": "v1",
+            "verdictLabel": "CAUTIOUS",
+            "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+            "citationCount": 0,
+            "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `2f857a39-1a52-4990-b124-15b48c5fb110`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+            "createdAt": "2026-09-11T20:19:25.658150+05:30",
+            "validationStatus": "VALID",
+            "validation": {
+              "isValid": true,
+              "uncitedClaimCount": 0,
+              "errors": []
+            }
+          }
+        },
+        "report_get": {
+          "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+          "version": "v1",
+          "verdictLabel": "CAUTIOUS",
+          "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+          "citationCount": 0,
+          "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `2f857a39-1a52-4990-b124-15b48c5fb110`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+          "createdAt": "2026-09-11T20:19:25.658150+05:30"
+        },
+        "diagnostics": {
+          "runId": "2f857a39-1a52-4990-b124-15b48c5fb110",
+          "companyId": "0a79a134-ace8-4ce8-9377-bcc85dad61b1",
+          "tokenInput": 0,
+          "tokenOutput": 0,
+          "estimatedCost": 0.0,
+          "sourcesTotal": 0,
+          "sourcesSuccess": 0,
+          "sourceSuccessRate": 0.0,
+          "docsTotal": 0,
+          "docsParsed": 0,
+          "parserFailureRate": 0.0,
+          "evidenceCount": 0,
+          "claimsCount": 0,
+          "citationCount": 0,
+          "reportValidationStatus": "VALID",
+          "validationErrorCount": 0,
+          "discoverMs": 0,
+          "ingestMs": 0,
+          "extractMs": 0,
+          "claimsMs": 0,
+          "reportMs": 3,
+          "createdAt": "2026-09-11T20:19:25.665821+05:30",
+          "updatedAt": "2026-09-11T20:19:25.665821+05:30"
+        }
+      }
+    },
+    {
+      "company": "TCS",
+      "run_id": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+      "started_at": "2026-09-11T14:49:25.695449+00:00",
+      "finished_at": "2026-09-11T14:49:25.762252+00:00",
+      "ok": true,
+      "failure_stage": null,
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 8,
+          "error": null
+        },
+        {
+          "stage": "discover",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 14,
+          "error": null
+        },
+        {
+          "stage": "ingest",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 5,
+          "error": null
+        },
+        {
+          "stage": "extract",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 5,
+          "error": null
+        },
+        {
+          "stage": "claims",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 4,
+          "error": null
+        },
+        {
+          "stage": "report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 17,
+          "error": null
+        },
+        {
+          "stage": "get_report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        },
+        {
+          "stage": "get_diagnostics",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        }
+      ],
+      "report_summary": {
+        "version": "v1",
+        "verdictLabel": "CAUTIOUS",
+        "citationCount": 0,
+        "reportMarkdownLength": 849
+      },
+      "diagnostics": {
+        "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+        "companyId": "d85e4f43-6326-44a0-81ad-bdb11089272e",
+        "tokenInput": 0,
+        "tokenOutput": 0,
+        "estimatedCost": 0.0,
+        "sourcesTotal": 0,
+        "sourcesSuccess": 0,
+        "sourceSuccessRate": 0.0,
+        "docsTotal": 0,
+        "docsParsed": 0,
+        "parserFailureRate": 0.0,
+        "evidenceCount": 0,
+        "claimsCount": 0,
+        "citationCount": 0,
+        "reportValidationStatus": "VALID",
+        "validationErrorCount": 0,
+        "discoverMs": 0,
+        "ingestMs": 0,
+        "extractMs": 0,
+        "claimsMs": 0,
+        "reportMs": 2,
+        "createdAt": "2026-09-11T20:19:25.742917+05:30",
+        "updatedAt": "2026-09-11T20:19:25.742917+05:30"
+      },
+      "raw": {
+        "create_run": {
+          "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+          "status": "PENDING",
+          "company": "TCS"
+        },
+        "steps": {
+          "discover": {
+            "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+            "company": "TCS",
+            "resolvedMatchType": "EXACT_LEGAL_NAME",
+            "totalDiscovered": 0,
+            "totalUpdated": 12,
+            "countsBySourceType": {
+              "NSE_ANNOUNCEMENT": 3,
+              "NSE_RESULTS": 3,
+              "BSE_FILING": 3,
+              "COMPANY_IR": 3
+            }
+          },
+          "ingest": {
+            "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+            "totalSources": 0,
+            "fetched": 0,
+            "deduped": 0,
+            "parsed": 0,
+            "failed": 0
+          },
+          "extract": {
+            "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+            "processedDocuments": 0,
+            "extracted": 0,
+            "deduped": 0,
+            "failedDocuments": 0,
+            "countsByType": {
+              "BUSINESS_SIGNAL": 0,
+              "FINANCIAL_METRIC": 0,
+              "PROMOTER_HOLDING": 0
+            }
+          },
+          "claims": {
+            "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+            "totalClaims": 0,
+            "countsByType": {
+              "BUSINESS_MODEL": 0,
+              "FINANCIAL_TREND": 0,
+              "PROMOTER_GOVERNANCE": 0
+            },
+            "contradictionCounts": {
+              "NONE": 0,
+              "INTRA_DOC": 0,
+              "CROSS_DOC": 0,
+              "METRIC_CONFLICT": 0
+            },
+            "avgConfidence": 0.0
+          },
+          "report": {
+            "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+            "version": "v1",
+            "verdictLabel": "CAUTIOUS",
+            "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+            "citationCount": 0,
+            "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `530296ac-b632-4b59-ad66-7a61d98d79dd`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+            "createdAt": "2026-09-11T20:19:25.738329+05:30",
+            "validationStatus": "VALID",
+            "validation": {
+              "isValid": true,
+              "uncitedClaimCount": 0,
+              "errors": []
+            }
+          }
+        },
+        "report_get": {
+          "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+          "version": "v1",
+          "verdictLabel": "CAUTIOUS",
+          "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+          "citationCount": 0,
+          "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `530296ac-b632-4b59-ad66-7a61d98d79dd`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+          "createdAt": "2026-09-11T20:19:25.738329+05:30"
+        },
+        "diagnostics": {
+          "runId": "530296ac-b632-4b59-ad66-7a61d98d79dd",
+          "companyId": "d85e4f43-6326-44a0-81ad-bdb11089272e",
+          "tokenInput": 0,
+          "tokenOutput": 0,
+          "estimatedCost": 0.0,
+          "sourcesTotal": 0,
+          "sourcesSuccess": 0,
+          "sourceSuccessRate": 0.0,
+          "docsTotal": 0,
+          "docsParsed": 0,
+          "parserFailureRate": 0.0,
+          "evidenceCount": 0,
+          "claimsCount": 0,
+          "citationCount": 0,
+          "reportValidationStatus": "VALID",
+          "validationErrorCount": 0,
+          "discoverMs": 0,
+          "ingestMs": 0,
+          "extractMs": 0,
+          "claimsMs": 0,
+          "reportMs": 2,
+          "createdAt": "2026-09-11T20:19:25.742917+05:30",
+          "updatedAt": "2026-09-11T20:19:25.742917+05:30"
+        }
+      }
+    },
+    {
+      "company": "HDFC Bank",
+      "run_id": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+      "started_at": "2026-09-11T14:49:25.763595+00:00",
+      "finished_at": "2026-09-11T14:49:25.834366+00:00",
+      "ok": true,
+      "failure_stage": null,
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 7,
+          "error": null
+        },
+        {
+          "stage": "discover",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 16,
+          "error": null
+        },
+        {
+          "stage": "ingest",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 4,
+          "error": null
+        },
+        {
+          "stage": "extract",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 5,
+          "error": null
+        },
+        {
+          "stage": "claims",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 8,
+          "error": null
+        },
+        {
+          "stage": "report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 19,
+          "error": null
+        },
+        {
+          "stage": "get_report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        },
+        {
+          "stage": "get_diagnostics",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        }
+      ],
+      "report_summary": {
+        "version": "v1",
+        "verdictLabel": "CAUTIOUS",
+        "citationCount": 0,
+        "reportMarkdownLength": 849
+      },
+      "diagnostics": {
+        "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+        "companyId": "a3450bf0-703f-44b1-92f8-c150515b6d59",
+        "tokenInput": 0,
+        "tokenOutput": 0,
+        "estimatedCost": 0.0,
+        "sourcesTotal": 0,
+        "sourcesSuccess": 0,
+        "sourceSuccessRate": 0.0,
+        "docsTotal": 0,
+        "docsParsed": 0,
+        "parserFailureRate": 0.0,
+        "evidenceCount": 0,
+        "claimsCount": 0,
+        "citationCount": 0,
+        "reportValidationStatus": "VALID",
+        "validationErrorCount": 0,
+        "discoverMs": 0,
+        "ingestMs": 0,
+        "extractMs": 0,
+        "claimsMs": 0,
+        "reportMs": 2,
+        "createdAt": "2026-09-11T20:19:25.814600+05:30",
+        "updatedAt": "2026-09-11T20:19:25.814600+05:30"
+      },
+      "raw": {
+        "create_run": {
+          "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+          "status": "PENDING",
+          "company": "HDFC Bank"
+        },
+        "steps": {
+          "discover": {
+            "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+            "company": "HDFC Bank",
+            "resolvedMatchType": "EXACT_LEGAL_NAME",
+            "totalDiscovered": 0,
+            "totalUpdated": 12,
+            "countsBySourceType": {
+              "NSE_ANNOUNCEMENT": 3,
+              "NSE_RESULTS": 3,
+              "BSE_FILING": 3,
+              "COMPANY_IR": 3
+            }
+          },
+          "ingest": {
+            "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+            "totalSources": 0,
+            "fetched": 0,
+            "deduped": 0,
+            "parsed": 0,
+            "failed": 0
+          },
+          "extract": {
+            "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+            "processedDocuments": 0,
+            "extracted": 0,
+            "deduped": 0,
+            "failedDocuments": 0,
+            "countsByType": {
+              "BUSINESS_SIGNAL": 0,
+              "FINANCIAL_METRIC": 0,
+              "PROMOTER_HOLDING": 0
+            }
+          },
+          "claims": {
+            "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+            "totalClaims": 0,
+            "countsByType": {
+              "BUSINESS_MODEL": 0,
+              "FINANCIAL_TREND": 0,
+              "PROMOTER_GOVERNANCE": 0
+            },
+            "contradictionCounts": {
+              "NONE": 0,
+              "INTRA_DOC": 0,
+              "CROSS_DOC": 0,
+              "METRIC_CONFLICT": 0
+            },
+            "avgConfidence": 0.0
+          },
+          "report": {
+            "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+            "version": "v1",
+            "verdictLabel": "CAUTIOUS",
+            "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+            "citationCount": 0,
+            "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `c22f3f95-a7fc-46e5-8793-d8b9f5dd0117`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+            "createdAt": "2026-09-11T20:19:25.809563+05:30",
+            "validationStatus": "VALID",
+            "validation": {
+              "isValid": true,
+              "uncitedClaimCount": 0,
+              "errors": []
+            }
+          }
+        },
+        "report_get": {
+          "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+          "version": "v1",
+          "verdictLabel": "CAUTIOUS",
+          "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+          "citationCount": 0,
+          "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `c22f3f95-a7fc-46e5-8793-d8b9f5dd0117`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+          "createdAt": "2026-09-11T20:19:25.809563+05:30"
+        },
+        "diagnostics": {
+          "runId": "c22f3f95-a7fc-46e5-8793-d8b9f5dd0117",
+          "companyId": "a3450bf0-703f-44b1-92f8-c150515b6d59",
+          "tokenInput": 0,
+          "tokenOutput": 0,
+          "estimatedCost": 0.0,
+          "sourcesTotal": 0,
+          "sourcesSuccess": 0,
+          "sourceSuccessRate": 0.0,
+          "docsTotal": 0,
+          "docsParsed": 0,
+          "parserFailureRate": 0.0,
+          "evidenceCount": 0,
+          "claimsCount": 0,
+          "citationCount": 0,
+          "reportValidationStatus": "VALID",
+          "validationErrorCount": 0,
+          "discoverMs": 0,
+          "ingestMs": 0,
+          "extractMs": 0,
+          "claimsMs": 0,
+          "reportMs": 2,
+          "createdAt": "2026-09-11T20:19:25.814600+05:30",
+          "updatedAt": "2026-09-11T20:19:25.814600+05:30"
+        }
+      }
+    },
+    {
+      "company": "Infosys",
+      "run_id": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+      "started_at": "2026-09-11T14:49:25.837018+00:00",
+      "finished_at": "2026-09-11T14:49:25.906270+00:00",
+      "ok": true,
+      "failure_stage": null,
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 8,
+          "error": null
+        },
+        {
+          "stage": "discover",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 15,
+          "error": null
+        },
+        {
+          "stage": "ingest",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 3,
+          "error": null
+        },
+        {
+          "stage": "extract",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 9,
+          "error": null
+        },
+        {
+          "stage": "claims",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 4,
+          "error": null
+        },
+        {
+          "stage": "report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 18,
+          "error": null
+        },
+        {
+          "stage": "get_report",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        },
+        {
+          "stage": "get_diagnostics",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 0,
+          "error": null
+        }
+      ],
+      "report_summary": {
+        "version": "v1",
+        "verdictLabel": "CAUTIOUS",
+        "citationCount": 0,
+        "reportMarkdownLength": 849
+      },
+      "diagnostics": {
+        "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+        "companyId": "6077a7c5-bd4e-45b2-b803-ac7bf17da5ed",
+        "tokenInput": 0,
+        "tokenOutput": 0,
+        "estimatedCost": 0.0,
+        "sourcesTotal": 0,
+        "sourcesSuccess": 0,
+        "sourceSuccessRate": 0.0,
+        "docsTotal": 0,
+        "docsParsed": 0,
+        "parserFailureRate": 0.0,
+        "evidenceCount": 0,
+        "claimsCount": 0,
+        "citationCount": 0,
+        "reportValidationStatus": "VALID",
+        "validationErrorCount": 0,
+        "discoverMs": 0,
+        "ingestMs": 0,
+        "extractMs": 0,
+        "claimsMs": 0,
+        "reportMs": 3,
+        "createdAt": "2026-09-11T20:19:25.885724+05:30",
+        "updatedAt": "2026-09-11T20:19:25.885724+05:30"
+      },
+      "raw": {
+        "create_run": {
+          "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+          "status": "PENDING",
+          "company": "Infosys"
+        },
+        "steps": {
+          "discover": {
+            "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+            "company": "Infosys",
+            "resolvedMatchType": "EXACT_LEGAL_NAME",
+            "totalDiscovered": 0,
+            "totalUpdated": 12,
+            "countsBySourceType": {
+              "NSE_ANNOUNCEMENT": 3,
+              "NSE_RESULTS": 3,
+              "BSE_FILING": 3,
+              "COMPANY_IR": 3
+            }
+          },
+          "ingest": {
+            "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+            "totalSources": 0,
+            "fetched": 0,
+            "deduped": 0,
+            "parsed": 0,
+            "failed": 0
+          },
+          "extract": {
+            "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+            "processedDocuments": 0,
+            "extracted": 0,
+            "deduped": 0,
+            "failedDocuments": 0,
+            "countsByType": {
+              "BUSINESS_SIGNAL": 0,
+              "FINANCIAL_METRIC": 0,
+              "PROMOTER_HOLDING": 0
+            }
+          },
+          "claims": {
+            "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+            "totalClaims": 0,
+            "countsByType": {
+              "BUSINESS_MODEL": 0,
+              "FINANCIAL_TREND": 0,
+              "PROMOTER_GOVERNANCE": 0
+            },
+            "contradictionCounts": {
+              "NONE": 0,
+              "INTRA_DOC": 0,
+              "CROSS_DOC": 0,
+              "METRIC_CONFLICT": 0
+            },
+            "avgConfidence": 0.0
+          },
+          "report": {
+            "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+            "version": "v1",
+            "verdictLabel": "CAUTIOUS",
+            "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+            "citationCount": 0,
+            "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `bde416dd-1e06-4f0a-8200-3a5d4bd703cf`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+            "createdAt": "2026-09-11T20:19:25.881218+05:30",
+            "validationStatus": "VALID",
+            "validation": {
+              "isValid": true,
+              "uncitedClaimCount": 0,
+              "errors": []
+            }
+          }
+        },
+        "report_get": {
+          "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+          "version": "v1",
+          "verdictLabel": "CAUTIOUS",
+          "verdictSummary": "Insufficient claim coverage is available for a directional view at this stage.",
+          "citationCount": 0,
+          "reportMarkdown": "# EquityScout Research Report\n\nRun ID: `bde416dd-1e06-4f0a-8200-3a5d4bd703cf`\nVersion: `v1`\n\n## Company Snapshot\n- Snapshot generated from discovered sources and extracted evidence.\n\n## Business Model & Segment Direction\n- Limited claim coverage available in this section.\n\n## Financial Trend Commentary\n- Limited claim coverage available in this section.\n\n## Promoter & Governance Observations\n- Limited claim coverage available in this section.\n\n## Key Contradictions & Data Quality Notes\n- No major contradiction tags detected in current claim set.\n\n## Verdict\n**Label:** CAUTIOUS\n\nInsufficient claim coverage is available for a directional view at this stage.\n\n### Supporting points\n- No supporting points available.\n\n### Risks / caveats\n- Limited supported claims available.\n\n## Appendix: Evidence References\n- No evidence references available.",
+          "createdAt": "2026-09-11T20:19:25.881218+05:30"
+        },
+        "diagnostics": {
+          "runId": "bde416dd-1e06-4f0a-8200-3a5d4bd703cf",
+          "companyId": "6077a7c5-bd4e-45b2-b803-ac7bf17da5ed",
+          "tokenInput": 0,
+          "tokenOutput": 0,
+          "estimatedCost": 0.0,
+          "sourcesTotal": 0,
+          "sourcesSuccess": 0,
+          "sourceSuccessRate": 0.0,
+          "docsTotal": 0,
+          "docsParsed": 0,
+          "parserFailureRate": 0.0,
+          "evidenceCount": 0,
+          "claimsCount": 0,
+          "citationCount": 0,
+          "reportValidationStatus": "VALID",
+          "validationErrorCount": 0,
+          "discoverMs": 0,
+          "ingestMs": 0,
+          "extractMs": 0,
+          "claimsMs": 0,
+          "reportMs": 3,
+          "createdAt": "2026-09-11T20:19:25.885724+05:30",
+          "updatedAt": "2026-09-11T20:19:25.885724+05:30"
+        }
+      }
+    },
+    {
+      "company": "ICICI Bank",
+      "run_id": "191e51b7-93f2-4429-b6fd-7462dbbc3a07",
+      "started_at": "2026-09-11T14:49:25.908302+00:00",
+      "finished_at": "2026-09-11T14:51:25.958392+00:00",
+      "ok": false,
+      "failure_stage": "ingest",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 9,
+          "error": null
+        },
+        {
+          "stage": "discover",
+          "status_code": 200,
+          "ok": true,
+          "elapsed_ms": 31,
+          "error": null
+        },
+        {
+          "stage": "ingest",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 120009,
+          "error": "Timeout after 120s"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "runId": "191e51b7-93f2-4429-b6fd-7462dbbc3a07",
+          "status": "PENDING",
+          "company": "ICICI Bank"
+        },
+        "steps": {
+          "discover": {
+            "runId": "191e51b7-93f2-4429-b6fd-7462dbbc3a07",
+            "company": "ICICI Bank",
+            "resolvedMatchType": "EXACT_LEGAL_NAME",
+            "totalDiscovered": 4,
+            "totalUpdated": 8,
+            "countsBySourceType": {
+              "NSE_ANNOUNCEMENT": 3,
+              "NSE_RESULTS": 3,
+              "BSE_FILING": 3,
+              "COMPANY_IR": 3
+            }
+          },
+          "ingest": {
+            "error": "Timeout after 120s"
+          }
+        },
+        "report_get": null,
+        "diagnostics": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,328 @@
+{
+  "generatedAt": "2026-09-11T12:51:10.583775+00:00",
+  "summary": {
+    "totalCompanies": 10,
+    "successfulRuns": 0,
+    "failedRuns": 10,
+    "successRate": 0.0,
+    "metrics": {
+      "runtimeMs": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "citationCount": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "unsupportedClaimRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "sourceSuccessRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "parserFailureRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "estimatedCost": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "failureBuckets": {
+      "create_run": 10
+    }
+  },
+  "results": [
+    {
+      "company": "Reliance Industries",
+      "run_id": null,
+      "started_at": "2026-09-11T12:50:50.243067+00:00",
+      "finished_at": "2026-09-11T12:50:52.288210+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2043,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA993B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA993B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "TCS",
+      "run_id": null,
+      "started_at": "2026-09-11T12:50:52.289611+00:00",
+      "finished_at": "2026-09-11T12:50:54.315302+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2025,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA60550>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA60550>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "HDFC Bank",
+      "run_id": null,
+      "started_at": "2026-09-11T12:50:54.315775+00:00",
+      "finished_at": "2026-09-11T12:50:56.353058+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2037,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA60CD0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA60CD0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Infosys",
+      "run_id": null,
+      "started_at": "2026-09-11T12:50:56.353370+00:00",
+      "finished_at": "2026-09-11T12:50:58.389505+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2036,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA68770>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA68770>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "ICICI Bank",
+      "run_id": null,
+      "started_at": "2026-09-11T12:50:58.390124+00:00",
+      "finished_at": "2026-09-11T12:51:00.409107+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2018,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA68E90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AAA68E90>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Larsen & Toubro",
+      "run_id": null,
+      "started_at": "2026-09-11T12:51:00.409625+00:00",
+      "finished_at": "2026-09-11T12:51:02.439648+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2029,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9F2E70>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9F2E70>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Sun Pharma",
+      "run_id": null,
+      "started_at": "2026-09-11T12:51:02.439822+00:00",
+      "finished_at": "2026-09-11T12:51:04.462306+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2022,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE470>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE470>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Bajaj Finance",
+      "run_id": null,
+      "started_at": "2026-09-11T12:51:04.462531+00:00",
+      "finished_at": "2026-09-11T12:51:06.510975+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2048,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE360>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE360>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Tata Motors",
+      "run_id": null,
+      "started_at": "2026-09-11T12:51:06.511517+00:00",
+      "finished_at": "2026-09-11T12:51:08.563892+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2052,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE140>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EE140>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "Adani Ports",
+      "run_id": null,
+      "started_at": "2026-09-11T12:51:08.564097+00:00",
+      "finished_at": "2026-09-11T12:51:10.581896+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2017,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EDF20>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000222AA9EDF20>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    }
+  ]
+}

@@ -9,6 +9,12 @@ from apps.api.src.models import ResearchRun, Claim, Evidence, Report
 from apps.api.src.services.verdict_strategy import build_verdict_v1
 from apps.api.src.services.report_validator import validate_report_citations
 from apps.api.src.services.diagnostics_service import upsert_run_diagnostics
+from apps.api.src.services.report_citations import (
+    build_evidence_ref_map,
+    refs_for_claim,
+    append_refs,
+    count_inline_citations,
+)
 
 
 def _build_citation_index(evidence_rows: list[Evidence]) -> tuple[dict[str, str], list[str]]:
@@ -60,11 +66,48 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
     eq = db.query(Evidence).filter(Evidence.run_id == run.id).order_by(Evidence.created_at.desc())
     evidence_rows = eq.all()
 
+    evidence_payload = []
+    for ev in evidence_rows:
+        evidence_payload.append(
+            {
+                "locator": ev.locator,
+                "title": getattr(ev, "key", None) or "Evidence",
+                "key": getattr(ev, "key", None),
+                "canonical_url": getattr(ev, "canonical_url", None) or getattr(ev, "url", None),
+                "url": getattr(ev, "url", None),
+                "snippet": getattr(ev, "snippet", None),
+            }
+        )
+    
+    locator_to_ref, ordered_refs = build_evidence_ref_map(evidence_payload)
+    
+    def _render_claim_bullet(claim_obj) -> str:
+        claim_dict = {
+            "claimText": getattr(claim_obj, "claim_text", ""),
+            "supportingLocators": getattr(claim_obj, "supporting_locators", []) or [],
+        }
+        refs = refs_for_claim(claim_dict, locator_to_ref)
+        return "- " + append_refs(claim_dict["claimText"], refs)
+    
     t0 = time.time()
 
     verdict = build_verdict_v1(claims)
 
-    citation_map, appendix_lines = _build_citation_index(evidence_rows)
+    citation_map, _ = _build_citation_index(evidence_rows)
+
+    appendix_lines = ["## Appendix: Evidence References"]
+    if not ordered_refs:
+        appendix_lines.append("- No evidence references available.")
+    else:
+        for item in ordered_refs:
+            title = item["title"] or "Evidence"
+            url = item["url"] or "n/a"
+            snip = (item["snippet"] or "").strip().replace("\n", " ")
+            if len(snip) > 180:
+                snip = snip[:177] + "..."
+            appendix_lines.append(
+                f"- {item['ref']} {title} — {url} (snippet: \"{snip}\")"
+            )
 
     # map locator fingerprint -> citation tag
     ev_by_locator_key: dict[str, str] = {}
@@ -143,15 +186,13 @@ def generate_report_for_run(db: Session, run_id: str, version: str = "v1", inclu
     ]
 
     if include_appendix:
-        report_lines += ["", "## Appendix: Evidence References"]
-        if appendix_lines:
-            report_lines += appendix_lines
-        else:
-            report_lines += ["- No evidence references available."]
+        report_lines += [""] + appendix_lines
 
     markdown = "\n".join(report_lines)
     citation_count = len(citation_map)
 
+    citation_count = count_inline_citations(markdown)
+    
     validation = validate_report_citations(markdown)
     validation_status = "VALID" if validation["isValid"] else "INVALID"
 

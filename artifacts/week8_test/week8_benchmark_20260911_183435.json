@@ -1,0 +1,112 @@
+{
+  "generatedAt": "2026-09-11T13:04:35.180599+00:00",
+  "summary": {
+    "totalCompanies": 2,
+    "successfulRuns": 0,
+    "failedRuns": 2,
+    "successRate": 0.0,
+    "metrics": {
+      "runtimeMs": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "citationCount": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "unsupportedClaimRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "sourceSuccessRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "parserFailureRate": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "estimatedCost": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "failureBuckets": {
+      "create_run": 2
+    }
+  },
+  "results": [
+    {
+      "company": "Reliance Industries",
+      "run_id": null,
+      "started_at": "2026-09-11T13:02:09.172894+00:00",
+      "finished_at": "2026-09-11T13:04:33.152513+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 143979,
+          "error": "('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    },
+    {
+      "company": "TCS",
+      "run_id": null,
+      "started_at": "2026-09-11T13:04:33.152553+00:00",
+      "finished_at": "2026-09-11T13:04:35.180251+00:00",
+      "ok": false,
+      "failure_stage": "create_run",
+      "stages": [
+        {
+          "stage": "create_run",
+          "status_code": 0,
+          "ok": false,
+          "elapsed_ms": 2027,
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))"
+        }
+      ],
+      "report_summary": null,
+      "diagnostics": null,
+      "raw": {
+        "create_run": {
+          "error": "HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /research-runs (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))"
+        },
+        "steps": {},
+        "report_get": null,
+        "diagnostics": null
+      }
+    }
+  ]
+}

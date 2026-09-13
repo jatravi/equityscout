@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from decimal import Decimal
+from alembic.environment import Any
+from pydantic.dataclasses import dataclass
+from pydantic.dataclasses import dataclass
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -15,10 +18,78 @@ from apps.api.src.models import (
     RunDiagnostics,
 )
 
-def _safe_rate(n: int, d: int) -> float:
-    if d <= 0:
+@dataclass
+class StageMetrics:
+    discover_ms: int = 0
+    ingest_ms: int = 0
+    extract_ms: int = 0
+    claims_ms: int = 0
+    report_ms: int = 0
+
+def safe_rate(num: int | float, den: int | float) -> float:
+    if den is None or den == 0:
         return 0.0
-    return round(float(n) / float(d), 3)
+    v = float(num) / float(den)
+    if v < 0:
+        return 0.0
+    if v > 1:
+        return 1.0
+    return round(v, 4)
+
+def to_int(v: Any, default: int = 0) -> int:
+    try:
+        return int(v)
+    except Exception:
+        return default
+
+def to_float(v: Any, default: float = 0.0) -> float:
+    try:
+        return float(v)
+    except Exception:
+        return default
+
+def build_diagnostics_payload(
+    *,
+    run_id: str,
+    source_total: int,
+    source_success: int,
+    docs_total: int,
+    docs_parsed: int,
+    evidence_count: int,
+    claims_count: int,
+    citation_count: int,
+    report_validation_status: str,
+    validation_error_count: int,
+    token_input: int = 0,
+    token_output: int = 0,
+    estimated_cost: float = 0.0,
+    stage_metrics: StageMetrics | None = None,
+) -> dict[str, Any]:
+    sm = stage_metrics or StageMetrics()
+
+    payload = {
+        "runId": run_id,
+        "tokenInput": to_int(token_input),
+        "tokenOutput": to_int(token_output),
+        "estimatedCost": round(to_float(estimated_cost), 6),
+        "sourcesTotal": to_int(source_total),
+        "sourcesSuccess": to_int(source_success),
+        "sourceSuccessRate": safe_rate(source_success, source_total),
+        "docsTotal": to_int(docs_total),
+        "docsParsed": to_int(docs_parsed),
+        "parserFailureRate": safe_rate(max(docs_total - docs_parsed, 0), docs_total),
+        "evidenceCount": to_int(evidence_count),
+        "claimsCount": to_int(claims_count),
+        "citationCount": to_int(citation_count),
+        "reportValidationStatus": report_validation_status or "PENDING",
+        "validationErrorCount": to_int(validation_error_count),
+        "discoverMs": to_int(sm.discover_ms),
+        "ingestMs": to_int(sm.ingest_ms),
+        "extractMs": to_int(sm.extract_ms),
+        "claimsMs": to_int(sm.claims_ms),
+        "reportMs": to_int(sm.report_ms),
+    }
+    return payload
 
 def upsert_run_diagnostics(
     db: Session,
@@ -48,8 +119,8 @@ def upsert_run_diagnostics(
     validation_error_count = len(getattr(rep, "validation_errors_json", []) or []) if rep else 0
 
     sources_success = docs_total  # proxy: successful fetch persisted as document row
-    source_success_rate = _safe_rate(sources_success, sources_total)
-    parser_failure_rate = _safe_rate(max(docs_total - docs_parsed, 0), docs_total)
+    source_success_rate = safe_rate(sources_success, sources_total)
+    parser_failure_rate = safe_rate(max(docs_total - docs_parsed, 0), docs_total)
 
     row = db.query(RunDiagnostics).filter(RunDiagnostics.run_id == run.id).first()
     if not row:

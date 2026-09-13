@@ -8,6 +8,7 @@ EquityScout is a staged research pipeline for equity analysis:
 - **Week 5:** Claims analysis v1 (business/financial/promoter + contradictions + confidence)
 - **Week 6:** VerdictStrategy v1 + fixed-format report generation with inline citations
 - **Week 7:** Validation + reliability hardening (claim-citation validation + diagnostics)
+- **Week 8:** QA + benchmark automation (cohort runs, regression pack, freeze readiness)
 
 ---
 
@@ -222,6 +223,52 @@ Returns per-run reliability/quality metrics:
 
 ---
 
+## Week 8 — QA + benchmark runs
+
+### Benchmark runner
+Run multi-company benchmark (10–20 Indian companies mix):
+
+```bash
+python scripts/run_week8_benchmark.py \
+  --base-url http://127.0.0.1:8000 \
+  --companies-file apps/api/tests/fixtures/week8_companies.json \
+  --max-companies 12 \
+  --stage-timeout 120 \
+  --out-dir artifacts/week8
+```
+
+### Week 8 reliability hardening in runner
+- hard per-stage timeout (`--stage-timeout`)
+- continue-on-failure/timeout across remaining companies
+- interim checkpoint JSON written after each company
+- `KeyboardInterrupt` handling writes partial/final summary
+- Windows-safe console output (`[OK]`, `[FAIL]`)
+
+### Benchmark artifacts
+- `artifacts/week8/week8_benchmark_YYYYMMDD_HHMMSS.partial.json`
+- `artifacts/week8/week8_benchmark_YYYYMMDD_HHMMSS.json`
+- `artifacts/week8/week8_benchmark_YYYYMMDD_HHMMSS.md`
+
+### Metrics tracked
+- citation coverage proxy (`citationCount`, validation errors)
+- unsupported claim rate proxy (`validationErrorCount / claimsCount`)
+- runtime (stage elapsed ms aggregate)
+- estimated cost (`estimatedCost`)
+- source success rate (`sourceSuccessRate`)
+- parser failure rate (`parserFailureRate`)
+
+### Week 8 tests
+```bash
+pytest -q apps/api/tests/test_week8_benchmark_smoke.py
+pytest -q apps/api/tests/test_week8_quality_thresholds.py
+pytest -q apps/api/tests/test_week8_citation_pipeline.py
+pytest -q apps/api/tests/test_week8_diagnostics_math.py
+pytest -q apps/api/tests/test_week8_diagnostics_endpoint_non_null.py
+pytest -q apps/api/tests/test_week8_regressions.py
+```
+
+---
+
 ## PowerShell quick run (Week 2 → Week 7)
 
 ```powershell
@@ -296,3 +343,12 @@ pytest -q apps/api/tests/test_week7_validation_and_diagnostics_flow.py
 - [x] Graceful degradation messaging
 - [x] Diagnostics endpoint (`/research-runs/{runId}/diagnostics`)
 - [x] Validation + diagnostics flow test
+
+### Week 8
+- [x] Benchmark cohort fixture (`week8_companies.json`)
+- [x] Benchmark runner (`run_week8_benchmark.py`)
+- [x] Runner timeout/checkpoint/interrupt hardening
+- [x] Citation pipeline regression guards
+- [x] Diagnostics hardening regression guards
+- [x] Week 8 regression pack (`test_week8_regressions.py`)
+- [ ] Final 10–20 cohort freeze signoff against acceptance thresholds
